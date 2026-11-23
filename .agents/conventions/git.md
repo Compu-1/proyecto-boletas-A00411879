@@ -30,7 +30,7 @@
 | `chore` | dependencias, configuración, scripts |
 | `style` | formato sin impacto lógico |
 
-Alcances: `server`, `slice`, `client-java`, `client-js`, `agents`.
+Alcances: `server`, `slice`, `client-java`, `client-js`, `deploy` (carpeta `deploy/`), `agents`.
 
 Ejemplos: `fix(server): sincroniza lockSeat para evitar doble bloqueo`, `feat(client-js): agrega mapa de sillas`, `docs(agents): registra decisión de polling`.
 
