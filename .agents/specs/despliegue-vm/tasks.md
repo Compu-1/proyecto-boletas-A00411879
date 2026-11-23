@@ -13,7 +13,7 @@ Comandos de `codigo_base/` con `JAVA_HOME` e `ICE_HOME` exportados (`conventions
 - [x] T5: Scripts `package.sh` e `install.sh`
 - [x] T6: Prueba completa en la VM de Multipass
 - [x] T7: Pasos de despliegue en el README
-- [ ] T8: Cierre
+- [x] T8: Cierre
 
 ## T1: Rama y documentos del spec
 - **Rama**: `git flow feature start despliegue-vm` (desde `develop`; lleva los cambios sin commit de spec, plan, tareas, `epics.md` y `decisions.md`)
@@ -74,7 +74,7 @@ Comandos de `codigo_base/` con `JAVA_HOME` e `ICE_HOME` exportados (`conventions
 - **Commit**: `docs: agrega los pasos de despliegue en la vm`
 
 ## T8: Cierre
-- [ ] `./gradlew build`, `./gradlew test` y `npm run build` en verde
-- [ ] Actualizar `project_state.md` (despliegue listo, pendiente repetirlo en la sala), `epics.md` (HU-14 y HU-15 quedan `[ ]` hasta hacerlo en la sala) y `decisions.md` si hubo decisiones en T6
+- [x] `./gradlew build`, `./gradlew test` y `npm run build` en verde
+- [x] Actualizar `project_state.md` (despliegue listo, pendiente repetirlo en la sala), `epics.md` (HU-14 y HU-15 quedan `[x]` hasta hacerlo en la sala) y `decisions.md` si hubo decisiones en T6
 - **Commit**: `docs(agents): cierra despliegue-vm`
 - [ ] `git flow feature finish despliegue-vm` (si el usuario lo pide)

@@ -1,6 +1,6 @@
 # Plan: Despliegue en una VM de la sala
 
-- **Spec**: [spec.md](spec.md) · **Rama**: `feature/despliegue-vm` · **Fecha**: 2026-11-23 · **Estado**: Aprobado
+- **Spec**: [spec.md](spec.md) · **Rama**: `feature/despliegue-vm` · **Fecha**: 2026-11-23 · **Estado**: Terminado
 
 ## Resumen
 
@@ -11,7 +11,8 @@ En el Mac se arma un paquete `icesi-live-arena.tar.gz` con el jar del servidor (
 | Capa | Archivo | Acción | Responsabilidad / firma pública |
 | :--- | :--- | :--- | :--- |
 | build | `codigo_base/server/build.gradle` | modificar | tarea `jar`: `Main-Class` = `BookingServerApp` y dependencias de `runtimeClasspath` dentro del jar -> `server/build/libs/server.jar` (`java -jar`) |
-| api | `client-js/src/js/api.js` | modificar | función interna `wsEndpoint()`: si `window.location.port === '3000'` -> `ws -h <host> -p 10002`; si no -> `ws -h <host> -p <puerto de la página o 80> -r /ws`. `connect` no cambia de firma |
+| api | `client-js/src/js/api.js` | modificar | función interna `wsEndpoint()`: página en el 80 (`port` vacío o `'80'`) -> `ws -h <host> -p 80 -r /ws`; otro puerto -> `ws -h <host> -p 10002`. `connect` no cambia de firma |
+| build | `client-js/webpack.config.js` | modificar | `output.publicPath: '/'` para que una ruta profunda pida `/bundle...js` (D-049, agregado en T6) |
 | deploy | `deploy/package.sh` | crear | en el Mac: `./gradlew :server:jar` + `npm run build` y empaqueta `server.jar`, `dist/`, `install.sh`, `.conf` y `.service` en `deploy/build/icesi-live-arena.tar.gz` |
 | deploy | `deploy/install.sh` | crear | en la VM, idempotente: `apt-get install` de `openjdk-17-jre-headless` y `nginx` si faltan; copia jar a `/opt/icesi-live-arena/` y `dist/` a `/var/www/icesi-live-arena/`; activa el sitio (quita `default`), `nginx -t`, `systemctl reload nginx`, `systemctl enable --now`; al final imprime la dirección y `date` |
 | deploy | `deploy/icesi-live-arena.conf` | crear | `server` de Nginx: `listen 80 default_server`, `root`, `try_files $uri /index.html`, `gzip` (js, css), caché larga para `bundle.*.js`, `location /ws` con `proxy_pass http://127.0.0.1:10002/`, `Upgrade`/`Connection` y `proxy_read_timeout 120s` |
@@ -31,7 +32,7 @@ Sin cambios en `BookingService.ice`, `BookingServiceImpl` ni `BookingServerApp` 
 ### D2: Cómo distingue `api.js` desarrollo de producción
 - **Contexto**: un mismo código debe servir en `npm start` y detrás de Nginx.
 - **Opciones**: A) mirar `window.location.port` en tiempo de ejecución. B) constante inyectada por Webpack (`DefinePlugin`) según `--mode`.
-- **Elegida**: A — **Por qué**: una línea, sin tocar `webpack.config.js`, y se explica sola: "si la página vino del dev server, voy al 10002; si vino de Nginx, voy por `/ws` del mismo origen".
+- **Elegida**: A — **Por qué**: una línea, sin tocar `webpack.config.js`, y se explica sola: "si la página vino de Nginx (80), voy por `/ws` del mismo origen; si no, voy directo al 10002" (regla invertida en T6 para no romper la vista previa en el 8080).
 
 ### D3: Cómo se ejecuta el servidor en la VM
 - **Contexto**: la VM no debe necesitar Gradle, `slice2java` ni `ICE_HOME`.
