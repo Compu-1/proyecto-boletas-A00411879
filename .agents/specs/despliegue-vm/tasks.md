@@ -8,7 +8,7 @@ Comandos de `codigo_base/` con `JAVA_HOME` e `ICE_HOME` exportados (`conventions
 
 - [x] T1: Rama y documentos del spec
 - [x] T2: Jar ejecutable del servidor
-- [ ] T3: Canal WebSocket según el origen en `api.js` (paralela con T2)
+- [x] T3: Canal WebSocket según el origen en `api.js` (paralela con T2)
 - [ ] T4: Configuración de Nginx y servicio `systemd` (paralela con T2 y T3)
 - [ ] T5: Scripts `package.sh` e `install.sh`
 - [ ] T6: Prueba completa en la VM de Multipass
@@ -34,8 +34,8 @@ Comandos de `codigo_base/` con `JAVA_HOME` e `ICE_HOME` exportados (`conventions
 ## T3: Canal WebSocket según el origen en `api.js` (paralela con T2)
 - **Archivos**: `client-js/src/js/api.js` (modificar)
 - **Acciones**:
-  - [ ] Agregar la función interna `wsEndpoint()`: con `window.location.port === '3000'` devuelve `ws -h <host> -p 10002`; si no, `ws -h <host> -p <puerto de la página o 80> -r /ws`; usarla en `connect` con un comentario que cite D-044.
-- **Verificación**: [ ] `npm run build` · [ ] manual: con `npm start` la taquilla conecta como antes (plano, retener `A-1`)
+  - [x] Agregar la función interna `wsEndpoint()`: con `window.location.port === '3000'` devuelve `ws -h <host> -p 10002`; si no, `ws -h <host> -p <puerto de la página o 80> -r /ws`; usarla en `connect` con un comentario que cite D-044.
+- **Verificación**: [x] `npm run build` · [x] manual: con `npm start` la taquilla conecta como antes (plano, retener `A-1`)
 - **Commit**: `feat(client-js): elige el canal websocket según el origen de la página`
 
 ## T4: Configuración de Nginx y servicio `systemd` (paralela con T2 y T3)
