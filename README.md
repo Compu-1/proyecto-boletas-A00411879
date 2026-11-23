@@ -60,7 +60,39 @@ npm run build      # production build in dist/
 python3 -m http.server 8080 -d dist   # optional: serve dist/ at http://localhost:8080
 ```
 
-`npm start` and `npm run build` generate the Ice stubs (`src/js/generated/`) on their own from the same `BookingService.ice` used by the backend; that folder is neither versioned nor edited. The browser talks to the server only over WebSocket (port 10002 of the same host as the page). Without a connection it shows a warning and the page must be reloaded.
+`npm start` and `npm run build` generate the Ice stubs (`src/js/generated/`) on their own from the same `BookingService.ice` used by the backend; that folder is neither versioned nor edited. The browser talks to the server only over WebSocket: port 10002 of the same host as the page, or `/ws` on port 80 when the page is served by Nginx (see below). Without a connection it shows a warning and the page must be reloaded.
+
+## Deployment on a VM
+
+The VM serves `dist/` with Nginx on port 80 and runs the server as the `systemd` service `icesi-live-arena`, which starts with the VM and restarts on its own if it fails. Nginx forwards the browser WebSocket from `/ws` to port 10002, so the browser only needs port 80. VM requirements: Ubuntu 22.04 or later, `sudo` and internet access (the installer adds Java 17 and Nginx if they are missing).
+
+1. On the Mac, build the package (jar with Ice inside, `dist/` and the installer):
+
+   ```bash
+   ./deploy/package.sh        # -> deploy/build/icesi-live-arena.tar.gz
+   ```
+
+2. Copy it to the VM and install it (it can be run again to update):
+
+   ```bash
+   scp deploy/build/icesi-live-arena.tar.gz <user>@<vm-ip>:
+   ssh <user>@<vm-ip>
+   tar xzf icesi-live-arena.tar.gz
+   cd icesi-live-arena && sudo ./install.sh
+   ```
+
+3. Open `http://<vm-ip>` from any computer in the room. The installer prints the VM time: compare it with the computer's clock (the countdown uses the browser clock; a gap over 2 s shifts it).
+
+Useful commands on the VM: `journalctl -u icesi-live-arena -f` (server log), `sudo systemctl restart icesi-live-arena`, `sudo nginx -t`. Without internet on the VM, install `openjdk-17-jre-headless` and `nginx` by hand first; the installer then skips that step.
+
+To rehearse it locally with [Multipass](https://multipass.run) (a real Ubuntu VM on the Mac):
+
+```bash
+multipass launch 24.04 --name arena
+multipass transfer deploy/build/icesi-live-arena.tar.gz arena:
+multipass exec arena -- bash -c 'tar xzf icesi-live-arena.tar.gz && cd icesi-live-arena && sudo ./install.sh'
+multipass delete --purge arena   # when done
+```
 
 ## Demo
 

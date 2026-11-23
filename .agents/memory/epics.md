@@ -17,3 +17,5 @@ Registro de HU. Lo actualiza `c-specify` al aprobar un spec (siguiente número l
 | HU-11 | Pagar mis sillas con nombre y correo | RF-5, RF-7 | [checkout-reservas](../specs/checkout-reservas/spec.md) | [x] |
 | HU-12 | Recibir mi comprobante con el código de reserva | RF-5, RNF-1 | [checkout-reservas](../specs/checkout-reservas/spec.md) | [x] |
 | HU-13 | Consultar mis compras | RF-6 | [checkout-reservas](../specs/checkout-reservas/spec.md) | [x] |
+| HU-14 | Usar la taquilla desde otro equipo de la sala | RF-1 a RF-7, RNF-1, RNF-4 | [despliegue-vm](../specs/despliegue-vm/spec.md) | [ ] |
+| HU-15 | Encontrar la taquilla disponible aunque la VM se reinicie | RF-1, RF-7 | [despliegue-vm](../specs/despliegue-vm/spec.md) | [ ] |

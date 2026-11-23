@@ -16,6 +16,16 @@ const STATES = { AVAILABLE: 'available', LOCKED: 'locked', BOOKED: 'booked' };
 let communicator = null;
 let proxy = null;
 
+// D-044: servida por Nginx en el 80 (VM) va por /ws del mismo origen; con cualquier otro
+// puerto (`npm start` en 3000, vista previa de dist/ en 8080) va directo al 10002
+function wsEndpoint() {
+  const { hostname, port } = window.location;
+  if (port === '' || port === '80') {
+    return `ws -h ${hostname} -p 80 -r /ws`;
+  }
+  return `ws -h ${hostname} -p ${WS_PORT}`;
+}
+
 // Errores de negocio (Slice) conservan su reason; los de red se unifican en un mensaje
 function translate(error) {
   if (error && error.reason) {
@@ -39,7 +49,7 @@ export async function connect({ onDisconnect }) {
   communicator = Ice.initialize(initData);
 
   const base = communicator
-    .stringToProxy(`BookingService:ws -h ${window.location.hostname} -p ${WS_PORT}`)
+    .stringToProxy(`BookingService:${wsEndpoint()}`)
     .ice_invocationTimeout(TIMEOUT_MS);
 
   try {

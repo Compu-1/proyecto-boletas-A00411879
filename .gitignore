@@ -13,3 +13,4 @@ docs/*.synctex.gz
 client-js/node_modules/
 client-js/dist/
 client-js/src/js/generated/
+deploy/build/

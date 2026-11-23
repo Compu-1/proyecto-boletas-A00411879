@@ -6,6 +6,8 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.[contenthash:8].js',
+    // Ruta absoluta del bundle: con try_files de Nginx, /cualquier/ruta debe pedir /bundle..., no /cualquier/bundle...
+    publicPath: '/',
     clean: true,
   },
   module: {
