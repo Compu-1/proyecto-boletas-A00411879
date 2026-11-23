@@ -65,7 +65,7 @@ export async function getEventInfo() {
 export async function getSeats() {
   try {
     const seats = await proxy.getAllSeats();
-    return seats.map(({ id, zone, row, number, price, state, lockedByClientId }) => ({
+    return seats.map(({ id, zone, row, number, price, state, lockedByClientId, lockTimestamp, lockDurationSeconds }) => ({
       id,
       zone: ZONES[zone.name],
       row,
@@ -73,6 +73,8 @@ export async function getSeats() {
       price,
       state: STATES[state.name],
       lockedBy: lockedByClientId,
+      // Los long de Ice llegan como Ice.Long; el vencimiento (ms epoch) es 0 si la silla no está retenida (D-031)
+      expiresAt: state === BookingApp.SeatState.LOCKED ? lockTimestamp.toNumber() + lockDurationSeconds.toNumber() * 1000 : 0,
     }));
   } catch (error) {
     throw translate(error);
@@ -83,6 +85,15 @@ export async function getSeats() {
 export async function lockSeat(seatId, clientId) {
   try {
     await proxy.lockSeat(seatId, clientId);
+  } catch (error) {
+    throw translate(error);
+  }
+}
+
+// Libera una silla retenida por el comprador; si ya venció o la tomó otro, el servidor no hace nada
+export async function releaseSeat(seatId, clientId) {
+  try {
+    await proxy.releaseSeat(seatId, clientId);
   } catch (error) {
     throw translate(error);
   }

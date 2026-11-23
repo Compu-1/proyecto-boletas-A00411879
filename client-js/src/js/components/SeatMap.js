@@ -1,4 +1,5 @@
 import { formatPrice } from '../format.js';
+import { visibleState } from '../seats.js';
 
 const ZONES = [
   { key: 'vip', label: 'VIP' },
@@ -27,14 +28,6 @@ function element(tag, className, text) {
     node.textContent = text;
   }
   return node;
-}
-
-// Estado visible de una silla: "mía" si la retiene este comprador, "otro" si la retiene alguien más
-function visibleState({ state, lockedBy }, clientId) {
-  if (state === 'locked') {
-    return lockedBy === clientId ? 'mine' : 'other';
-  }
-  return state;
 }
 
 function buildLegend() {
@@ -88,7 +81,7 @@ export function SeatMap(contenedor, { onSeatClick }) {
   }
 
   return {
-    render({ seats, clientId, pendingSeats, connection }) {
+    render({ seats, clientId, pendingSeats, connection, now, releasedSeats }) {
       if (seats.length === 0) {
         return;
       }
@@ -99,7 +92,7 @@ export function SeatMap(contenedor, { onSeatClick }) {
       contenedor.classList.toggle('seat-map--offline', offline);
       seats.forEach((seat) => {
         const button = buttons.get(seat.id);
-        const state = visibleState(seat, clientId);
+        const state = visibleState(seat, { clientId, now, releasedSeats });
         // Solo se toca el DOM si algo cambió: el plano se repinta cada segundo
         const className = `seat-map__seat seat-map__seat--${state}`;
         if (button.className !== className) {
