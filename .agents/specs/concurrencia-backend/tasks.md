@@ -6,8 +6,8 @@ Comandos desde `codigo_base/`, con `JAVA_HOME` e `ICE_HOME` exportados (`convent
 
 ## Resumen
 
-- [ ] T1: Documentos del spec en la rama
-- [ ] T2: Reloj inyectable y vencimiento exacto a los 90 s
+- [x] T1: Documentos del spec en la rama
+- [x] T2: Reloj inyectable y vencimiento exacto a los 90 s
 - [ ] T3: Exclusión mutua en las operaciones del servicio
 - [ ] T4: Consultas con estado efectivo y copias
 - [ ] T5: Pago todo o nada
@@ -17,19 +17,19 @@ Comandos desde `codigo_base/`, con `JAVA_HOME` e `ICE_HOME` exportados (`convent
 - **Rama**: ya creada con `git flow feature start concurrencia-backend`
 - **Archivos**: `README.md`, `docs/`, `.gitignore`, `.agents/` (spec, plan, decisiones, estado)
 - **Acciones**:
-  - [ ] Commit previo con la reorganización de carpetas, el README único y el `.gitignore`.
-  - [ ] Commit con spec, plan aprobados, decisiones D-010 a D-015 y `epics.md`.
-- **Verificación**: [ ] `git status --short` vacío
+  - [x] Commit previo con la reorganización de carpetas, el README único y el `.gitignore`.
+  - [x] Commit con spec, plan aprobados, decisiones D-010 a D-015 y `epics.md`.
+- **Verificación**: [x] `git status --short` vacío
 - **Commits**: `chore(docs): reorganiza documentos y unifica README` · `docs(agents): aprueba spec y plan de concurrencia-backend`
 
 ## T2: Reloj inyectable y vencimiento exacto a los 90 s
 - **Archivos**: `BookingServiceImpl.java` (modificar), `BookingServiceImplTest.java` (crear)
 - **Acciones**:
-  - [ ] Crear la clase de pruebas con un reloj falso adelantable y escribir `hu01_retenerDisponible`, `hu01_renovar` y `hu03_otroRetieneVencida` (esta última falla hoy).
-  - [ ] Agregar el constructor de paquete `BookingServiceImpl(LongSupplier)`; el constructor público delega con el reloj del sistema (D4).
-  - [ ] Reemplazar las 4 lecturas de `System.currentTimeMillis()` por el reloj inyectado.
-  - [ ] Cambiar `isLockExpired` para comparar en milisegundos con `>=`: vence justo en el segundo 90.
-- **Verificación**: [ ] `./gradlew build` · [ ] `./gradlew :server:test --tests 'co.icesi.booking.server.BookingServiceImplTest'`
+  - [x] Crear la clase de pruebas con un reloj falso adelantable y escribir `hu01_retenerDisponible`, `hu01_renovar` y `hu03_otroRetieneVencida` (esta última falla hoy).
+  - [x] Agregar el constructor de paquete `BookingServiceImpl(LongSupplier)`; el constructor público delega con el reloj del sistema (D4).
+  - [x] Reemplazar las 4 lecturas de `System.currentTimeMillis()` por el reloj inyectado.
+  - [x] Cambiar `isLockExpired` para comparar en milisegundos con `>=`: vence justo en el segundo 90.
+- **Verificación**: [x] `./gradlew build` · [x] `./gradlew :server:test --tests 'co.icesi.booking.server.BookingServiceImplTest'`
 - **Commit**: `refactor(server): inyecta reloj y vence la retención a los 90 s`
 
 ## T3: Exclusión mutua en las operaciones del servicio

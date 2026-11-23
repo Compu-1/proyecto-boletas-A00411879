@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.LongSupplier;
 
 import com.zeroc.Ice.Current;
 
@@ -27,11 +28,18 @@ public class BookingServiceImpl implements BookingService {
 
     public static final long DEFAULT_LOCK_DURATION_SECONDS = 90;
 
+    private final LongSupplier clock;
     private final EventInfo eventInfo;
     private final Map<String, Seat> seatsMap = new HashMap<>();
     private final List<BookingRecord> bookingsList = new ArrayList<>();
 
     public BookingServiceImpl() {
+        this(System::currentTimeMillis);
+    }
+
+    // Reloj inyectable (milisegundos epoch) para que las pruebas controlen el tiempo
+    BookingServiceImpl(LongSupplier clock) {
+        this.clock = clock;
         this.eventInfo = new EventInfo(
                 "EVT-2026-LIVE",
                 "Concierto Icesi Live Rock & Pop 2026",
@@ -83,8 +91,8 @@ public class BookingServiceImpl implements BookingService {
 
     private boolean isLockExpired(Seat seat) {
         if (seat.state != SeatState.LOCKED) return false;
-        long elapsedSeconds = (System.currentTimeMillis() - seat.lockTimestamp) / 1000L;
-        return elapsedSeconds > seat.lockDurationSeconds;
+        long elapsedMillis = clock.getAsLong() - seat.lockTimestamp;
+        return elapsedMillis >= seat.lockDurationSeconds * 1000L;
     }
 
     private void updateEventCounters() {
@@ -160,7 +168,7 @@ public class BookingServiceImpl implements BookingService {
         if (seat.state != SeatState.AVAILABLE) {
             if (seat.state == SeatState.LOCKED && clientId.equals(seat.lockedByClientId)) {
                 // El mismo cliente renueva el bloqueo
-                seat.lockTimestamp = System.currentTimeMillis();
+                seat.lockTimestamp = clock.getAsLong();
                 long expiresAt = seat.lockTimestamp + (seat.lockDurationSeconds * 1000L);
                 return new LockResult(true, seatId, "Bloqueo renovado con éxito.", expiresAt);
             }
@@ -175,7 +183,7 @@ public class BookingServiceImpl implements BookingService {
 
         seat.state = SeatState.LOCKED;
         seat.lockedByClientId = clientId;
-        seat.lockTimestamp = System.currentTimeMillis();
+        seat.lockTimestamp = clock.getAsLong();
         seat.lockDurationSeconds = DEFAULT_LOCK_DURATION_SECONDS;
 
         long expiresAt = seat.lockTimestamp + (DEFAULT_LOCK_DURATION_SECONDS * 1000L);
@@ -250,7 +258,7 @@ public class BookingServiceImpl implements BookingService {
         }
 
         String bookingCode = "RES-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
-        long now = System.currentTimeMillis();
+        long now = clock.getAsLong();
 
         BookingRecord record = new BookingRecord(
                 bookingCode,
