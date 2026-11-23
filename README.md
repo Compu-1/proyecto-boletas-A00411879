@@ -13,7 +13,7 @@ Zones: VIP (rows A-B, $120.000), Platea (C-E, $75.000) and General (F-I, $45.000
 ```text
 codigo_base/   Gradle backend: common/ (Slice contract), server/ (service), client/ (Java console client)
 client-js/     frontend: vanilla JavaScript SPA with Webpack
-docs/          assignment (PDF and LaTeX source), wireframe and demo walkthrough (demostracion.md)
+docs/          assignment (PDF and LaTeX source), wireframe, demo walkthrough and demo video
 .agents/       workflow: conventions, design, decisions, specs and skills
 AGENTS.md      guide for coding agents (CLAUDE.md imports it)
 ```
@@ -65,3 +65,5 @@ python3 -m http.server 8080 -d dist   # optional: serve dist/ at http://localhos
 ## Demo
 
 Step-by-step manual test of the whole system (server, concurrency test, Webpack and the buyer flow in two windows), in Spanish: [`docs/demostracion.md`](docs/demostracion.md).
+
+Demo video (5:50, in Spanish): [`docs/video-demostracion.mp4`](docs/video-demostracion.mp4).

@@ -2,6 +2,8 @@
 
 Recorrido para comprobar Icesi Live Arena de punta a punta: el servidor y su prueba de concurrencia, el empaquetado con Webpack y el flujo completo de un comprador, desde retener sillas hasta recibir el código de reserva.
 
+Video de este recorrido: [`video-demostracion.mp4`](video-demostracion.mp4).
+
 ## Requisitos
 
 - JDK 17 e Ice 3.7 con `slice2java` instalado.

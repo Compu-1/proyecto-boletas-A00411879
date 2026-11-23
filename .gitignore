@@ -1,5 +1,8 @@
 .DS_Store
 
+# Grabaciones originales de pantalla (pesadas); se versiona solo docs/video-demostracion.mp4
+docs/*.mov
+
 # LaTeX: artefactos de compilación del enunciado
 docs/*.aux
 docs/*.log
