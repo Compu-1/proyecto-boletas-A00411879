@@ -11,7 +11,7 @@ Guía para agentes de código (Claude Code, Codex u otros) en este repositorio.
 | Ruta | Qué hay |
 | :--- | :--- |
 | `codigo_base/` | backend Gradle: `common/` (contrato Slice), `server/` (servant), `client/` (cliente Java de pruebas) |
-| `client-js/` | frontend (por crear) |
+| `client-js/` | frontend: SPA con Webpack (`src/js/api.js` es la única capa que habla con Ice) |
 | `docs/` | enunciado (PDF y `.tex`), logo y wireframe |
 | `README.md` | comandos de ejecución para personas (único README del repo) |
 | `.agents/memory/constitution.md` | visión, rol, RF/RNF, rúbrica: **leer primero** |
