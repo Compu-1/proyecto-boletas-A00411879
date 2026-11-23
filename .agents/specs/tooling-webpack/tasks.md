@@ -10,7 +10,7 @@ Comandos de `client-js/` desde esa carpeta; para verificar contra el sistema rea
 - [x] T2: Proyecto npm con Webpack y página vacía
 - [x] T3: Clases Slice y conexión por WebSocket
 - [x] T4: Estado y formato de precios (paralela con T3)
-- [ ] T5: Componentes del encabezado y de la conexión
+- [x] T5: Componentes del encabezado y de la conexión
 - [ ] T6: Conexión de todo y aviso sin conexión
 - [ ] T7: Cierre
 
@@ -52,9 +52,9 @@ Comandos de `client-js/` desde esa carpeta; para verificar contra el sistema rea
 ## T5: Componentes del encabezado y de la conexión
 - **Archivos**: `client-js/src/js/components/EventHeader.js`, `client-js/src/js/components/ConnectionBanner.js` (crear); `client-js/src/css/main.css`, `client-js/src/index.html` (modificar)
 - **Acciones**:
-  - [ ] Crear `EventHeader(contenedor)` con `render(estado)`: marca, nombre, fecha, lugar y los tres precios con `formatPrice`; sin evento no pinta datos. Textos con `textContent`.
-  - [ ] Crear `ConnectionBanner(contenedor)` con `render(estado)`: "Conectado" si `online`; franja roja con el mensaje del spec si `offline`.
-  - [ ] Estilos `.event-header__*` y `.connection-banner--online` / `--offline` solo con variables de `:root`.
+  - [x] Crear `EventHeader(contenedor)` con `render(estado)`: marca, nombre, fecha, lugar y los tres precios con `formatPrice`; sin evento no pinta datos. Textos con `textContent`.
+  - [x] Crear `ConnectionBanner(contenedor)` con `render(estado)`: "Conectado" si `online`; franja roja con el mensaje del spec si `offline`.
+  - [x] Estilos `.event-header__*` y `.connection-banner--online` / `--offline` solo con variables de `:root`.
 - **Verificación**: [ ] `npm run build` · [ ] `grep -nE '#[0-9A-Fa-f]{3,6}' client-js/src/css/main.css` solo coincide dentro de `:root`
 - **Commit**: `feat(client-js): agrega encabezado del evento y estado de conexión`
 

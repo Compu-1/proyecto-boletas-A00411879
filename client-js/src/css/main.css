@@ -27,3 +27,73 @@ body {
   color: var(--blanco);
   font-family: var(--fuente-texto);
 }
+
+.connection-banner {
+  font-family: var(--fuente-mono);
+  font-size: 0.8125rem;
+}
+
+.connection-banner--online {
+  padding: var(--e1) var(--e3);
+  color: var(--gris);
+  text-align: right;
+}
+
+.connection-banner--offline {
+  padding: var(--e2) var(--e3);
+  background: var(--rojo);
+  color: var(--blanco);
+  font-weight: bold;
+  text-align: center;
+}
+
+.event-header {
+  padding: var(--e4) var(--e3);
+  border-bottom: 1px solid var(--linea);
+}
+
+.event-header__brand {
+  margin: 0 0 var(--e1);
+  color: var(--gris);
+  font-family: var(--fuente-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+}
+
+.event-header__name {
+  margin: 0 0 var(--e1);
+  font-size: 1.75rem;
+  text-transform: uppercase;
+}
+
+.event-header__meta {
+  margin: 0 0 var(--e3);
+  color: var(--gris);
+}
+
+.event-header__prices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.event-header__price {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e1);
+}
+
+.event-header__zone {
+  color: var(--gris);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.event-header__amount {
+  font-family: var(--fuente-mono);
+  font-size: 1.25rem;
+}
