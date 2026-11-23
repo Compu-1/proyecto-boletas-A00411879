@@ -10,7 +10,7 @@ Comandos de `codigo_base/` con `JAVA_HOME` e `ICE_HOME` exportados (`conventions
 - [x] T2: Jar ejecutable del servidor
 - [x] T3: Canal WebSocket según el origen en `api.js` (paralela con T2)
 - [x] T4: Configuración de Nginx y servicio `systemd` (paralela con T2 y T3)
-- [ ] T5: Scripts `package.sh` e `install.sh`
+- [x] T5: Scripts `package.sh` e `install.sh`
 - [ ] T6: Prueba completa en la VM de Multipass
 - [ ] T7: Pasos de despliegue en el README
 - [ ] T8: Cierre
@@ -49,10 +49,10 @@ Comandos de `codigo_base/` con `JAVA_HOME` e `ICE_HOME` exportados (`conventions
 ## T5: Scripts `package.sh` e `install.sh`
 - **Archivos**: `deploy/package.sh`, `deploy/install.sh` (crear, ejecutables), `.gitignore` (modificar)
 - **Acciones**:
-  - [ ] `package.sh` (Mac, `set -e`): exporta `JAVA_HOME` e `ICE_HOME`, corre `./gradlew :server:jar` y `npm run build` y arma `deploy/build/icesi-live-arena.tar.gz` con `server.jar`, `dist/`, `install.sh`, `.conf` y `.service` (D-047).
-  - [ ] `install.sh` (VM, `set -e`, exige `sudo`): instala `openjdk-17-jre-headless` y `nginx` solo si faltan (se detiene con mensaje si no hay `openjdk-17`); copia el jar a `/opt/icesi-live-arena/` y `dist/` a `/var/www/icesi-live-arena/` (borrando el `dist/` anterior); copia la unidad y el sitio, quita el sitio `default`, `nginx -t`, `systemctl reload nginx`, `systemctl daemon-reload`, `systemctl enable --now` y `restart` del servicio; al final imprime `http://<ip>` y `date`. Mensajes en español.
-  - [ ] Ignorar `deploy/build/` en `.gitignore`.
-- **Verificación**: [ ] `bash -n deploy/*.sh` · [ ] `./deploy/package.sh` termina y `tar tzf` lista solo esos archivos, sin `src/` ni `node_modules/` (RN-04)
+  - [x] `package.sh` (Mac, `set -e`): exporta `JAVA_HOME` e `ICE_HOME`, corre `./gradlew :server:jar` y `npm run build` y arma `deploy/build/icesi-live-arena.tar.gz` con `server.jar`, `dist/`, `install.sh`, `.conf` y `.service` (D-047).
+  - [x] `install.sh` (VM, `set -e`, exige `sudo`): instala `openjdk-17-jre-headless` y `nginx` solo si faltan (se detiene con mensaje si no hay `openjdk-17`); copia el jar a `/opt/icesi-live-arena/` y `dist/` a `/var/www/icesi-live-arena/` (borrando el `dist/` anterior); copia la unidad y el sitio, quita el sitio `default`, `nginx -t`, `systemctl reload nginx`, `systemctl daemon-reload`, `systemctl enable --now` y `restart` del servicio; al final imprime `http://<ip>` y `date`. Mensajes en español.
+  - [x] Ignorar `deploy/build/` en `.gitignore`.
+- **Verificación**: [x] `bash -n deploy/*.sh` · [x] `./deploy/package.sh` termina y `tar tzf` lista solo esos archivos, sin `src/` ni `node_modules/` (RN-04)
 - **Commit**: `chore(deploy): agrega los scripts de empaquetado e instalación`
 
 ## T6: Prueba completa en la VM de Multipass
