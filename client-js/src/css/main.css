@@ -103,8 +103,27 @@ body {
   font-size: 1.25rem;
 }
 
+/* Plano a la izquierda y talón a la derecha desde 900 px; debajo del plano en pantallas menores */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--e4);
+  padding: 0 var(--e3) var(--e4);
+}
+
+@media (min-width: 900px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr) 320px;
+    align-items: start;
+  }
+}
+
 #seat-area {
-  padding: var(--e4) var(--e3);
+  padding: var(--e4) 0 0;
+}
+
+#cart {
+  margin-top: var(--e4);
 }
 
 .seat-map {
@@ -277,4 +296,97 @@ body {
 
 .toast[hidden] {
   display: none;
+}
+
+.cart [hidden] {
+  display: none;
+}
+
+.cart {
+  padding: var(--e3);
+  border: 1px solid var(--linea);
+  background: var(--negro-2);
+}
+
+.cart__title {
+  margin: 0 0 var(--e3);
+  color: var(--gris);
+  font-family: var(--fuente-mono);
+  font-size: 0.6875rem;
+  font-weight: normal;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.cart__empty {
+  margin: 0;
+  color: var(--gris);
+}
+
+.cart__lines {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cart__line {
+  display: grid;
+  grid-template-columns: 3ch 1fr auto 5ch auto;
+  align-items: center;
+  gap: var(--e2);
+  padding-left: var(--e2);
+  border-left: 4px solid var(--rojo);
+  font-family: var(--fuente-mono);
+  font-size: 0.875rem;
+}
+
+.cart__zone {
+  color: var(--gris);
+}
+
+.cart__remove {
+  width: var(--e4);
+  height: var(--e4);
+  padding: 0;
+  border: 1px solid var(--linea);
+  background: transparent;
+  color: var(--blanco);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 150ms, color 150ms;
+}
+
+.cart__remove:hover {
+  background: var(--blanco);
+  color: var(--negro);
+}
+
+/* Línea de corte perforada del talón */
+.cart__cut {
+  margin: var(--e3) 0;
+  border-top: 2px dashed var(--linea);
+}
+
+.cart__total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 0;
+}
+
+.cart__total-label {
+  color: var(--gris);
+  font-family: var(--fuente-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.cart__total-amount {
+  font-family: var(--fuente-mono);
+  font-size: 1.5rem;
 }
