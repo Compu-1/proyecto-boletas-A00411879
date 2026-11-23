@@ -22,7 +22,8 @@ function translate(error) {
     return new Error(error.reason);
   }
   if (error instanceof Ice.LocalException) {
-    return new Error(CONNECTION_ERROR);
+    // La marca permite a app.js distinguir un fallo de red de un rechazo de negocio
+    return Object.assign(new Error(CONNECTION_ERROR), { isConnectionError: true });
   }
   return error;
 }

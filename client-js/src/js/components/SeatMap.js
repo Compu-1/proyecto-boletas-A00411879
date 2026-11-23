@@ -100,9 +100,16 @@ export function SeatMap(contenedor, { onSeatClick }) {
       seats.forEach((seat) => {
         const button = buttons.get(seat.id);
         const state = visibleState(seat, clientId);
-        button.className = `seat-map__seat seat-map__seat--${state}`;
-        button.disabled = state !== 'available' || pendingSeats.has(seat.id) || offline;
-        button.setAttribute('aria-label', `Silla ${seat.id}, ${STATE_LABELS[state]}`);
+        // Solo se toca el DOM si algo cambió: el plano se repinta cada segundo
+        const className = `seat-map__seat seat-map__seat--${state}`;
+        if (button.className !== className) {
+          button.className = className;
+          button.setAttribute('aria-label', `Silla ${seat.id}, ${STATE_LABELS[state]}`);
+        }
+        const disabled = state !== 'available' || pendingSeats.has(seat.id) || offline;
+        if (button.disabled !== disabled) {
+          button.disabled = disabled;
+        }
       });
     },
   };

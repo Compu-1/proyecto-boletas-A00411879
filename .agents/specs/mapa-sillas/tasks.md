@@ -11,7 +11,7 @@ Comandos de `codigo_base/` con `JAVA_HOME` e `ICE_HOME` exportados (`conventions
 - [x] T3: Capa `api` y `store` (paralela con T2)
 - [x] T4: Plano de sillas `SeatMap` con sus estilos (paralela con T5)
 - [x] T5: Contadores del encabezado y `Toast` (paralela con T4)
-- [ ] T6: Conexión de todo en `app.js` y verificación en dos ventanas
+- [x] T6: Conexión de todo en `app.js` y verificación en dos ventanas
 - [ ] T7: Cierre
 
 ## T1: Rama y documentos del spec
@@ -60,9 +60,9 @@ Comandos de `codigo_base/` con `JAVA_HOME` e `ICE_HOME` exportados (`conventions
 ## T6: Conexión de todo en `app.js` y verificación en dos ventanas
 - **Archivos**: `client-js/src/js/app.js` (modificar)
 - **Acciones**:
-  - [ ] Crear `SeatMap` y `Toast`, y repintarlos en `render`.
-  - [ ] Agregar `refreshSeats()` con descarte de respuestas viejas (D-023) y el ciclo de 1 s que agenda la siguiente consulta al terminar la anterior y se detiene al quedar sin conexión (D-022).
-  - [ ] Agregar `handleSeatClick(id)`: marca la silla en `pendingSeats`, llama a `lockSeat`, refresca el plano; error de negocio al `Toast`; error de conexión pone `connection: 'offline'`; siempre quita la marca pendiente.
+  - [x] Crear `SeatMap` y `Toast`, y repintarlos en `render`.
+  - [x] Agregar `refreshSeats()` con descarte de respuestas viejas (D-023) y el ciclo de 1 s que agenda la siguiente consulta al terminar la anterior y se detiene al quedar sin conexión (D-022).
+  - [x] Agregar `handleSeatClick(id)`: marca la silla en `pendingSeats`, llama a `lockSeat`, refresca el plano; error de negocio al `Toast`; error de conexión pone `connection: 'offline'`; siempre quita la marca pendiente.
 - **Verificación**: [ ] `npm run build` · [ ] manual con servidor + `npm start` y dos ventanas, según la tabla del plan: 90 sillas y contadores 90/0/0; retener A-1 se ve punteada en la otra en máximo 2 s; clic en A-1 propia no genera otro `[LOCK-OK]`; C-5 vuelve a blanca máximo 2 s tras los 90 s; con el servidor detenido el aviso sale en máximo 10 s, el plano queda al 40 % y el clic no retiene
 - **Commit**: `feat(client-js): muestra el plano en vivo y retiene sillas`
 
