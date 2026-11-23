@@ -12,7 +12,7 @@ Comandos de `codigo_base/` con `JAVA_HOME` e `ICE_HOME` exportados (`conventions
 - [x] T4: Configuración de Nginx y servicio `systemd` (paralela con T2 y T3)
 - [x] T5: Scripts `package.sh` e `install.sh`
 - [x] T6: Prueba completa en la VM de Multipass
-- [ ] T7: Pasos de despliegue en el README
+- [x] T7: Pasos de despliegue en el README
 - [ ] T8: Cierre
 
 ## T1: Rama y documentos del spec
@@ -69,8 +69,8 @@ Comandos de `codigo_base/` con `JAVA_HOME` e `ICE_HOME` exportados (`conventions
 ## T7: Pasos de despliegue en el README
 - **Archivos**: `README.md` (modificar)
 - **Acciones**:
-  - [ ] Sección "Despliegue en la VM": requisitos (Ubuntu 22.04 o superior, `sudo`, internet), `./deploy/package.sh` en el Mac, los 4 comandos de la sala (`scp`, `ssh`, `tar xzf`, `sudo ./install.sh`), comparar `date` con el reloj del equipo (D-031), ver logs con `journalctl -u icesi-live-arena` y plan B sin internet; cómo repetir la prueba con Multipass.
-- **Verificación**: [ ] los comandos coinciden con los usados en T6
+  - [x] Sección "Despliegue en la VM": requisitos (Ubuntu 22.04 o superior, `sudo`, internet), `./deploy/package.sh` en el Mac, los 4 comandos de la sala (`scp`, `ssh`, `tar xzf`, `sudo ./install.sh`), comparar `date` con el reloj del equipo (D-031), ver logs con `journalctl -u icesi-live-arena` y plan B sin internet; cómo repetir la prueba con Multipass.
+- **Verificación**: [x] los comandos coinciden con los usados en T6
 - **Commit**: `docs: agrega los pasos de despliegue en la vm`
 
 ## T8: Cierre
