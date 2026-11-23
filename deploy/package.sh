@@ -23,7 +23,7 @@ mkdir -p "$STAGE"
 cp "$ROOT_DIR/codigo_base/server/build/libs/server.jar" "$STAGE/"
 cp -R "$ROOT_DIR/client-js/dist" "$STAGE/dist"
 cp "$DEPLOY_DIR/install.sh" "$DEPLOY_DIR/icesi-live-arena.conf" "$DEPLOY_DIR/icesi-live-arena.service" "$STAGE/"
-# COPYFILE_DISABLE evita que el tar de macOS agregue archivos ._* al paquete
-COPYFILE_DISABLE=1 tar -czf "$DEPLOY_DIR/build/icesi-live-arena.tar.gz" -C "$DEPLOY_DIR/build" icesi-live-arena
+# COPYFILE_DISABLE y --no-xattrs evitan que el tar de macOS agregue sus metadatos (._* y avisos en Ubuntu)
+COPYFILE_DISABLE=1 tar --no-xattrs -czf "$DEPLOY_DIR/build/icesi-live-arena.tar.gz" -C "$DEPLOY_DIR/build" icesi-live-arena
 
 echo "[OK] Paquete listo: $DEPLOY_DIR/build/icesi-live-arena.tar.gz"

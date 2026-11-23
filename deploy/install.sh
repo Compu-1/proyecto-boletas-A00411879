@@ -2,6 +2,7 @@
 # Instala Icesi Live Arena en una VM Ubuntu (22.04 o superior). Se puede correr varias veces.
 # Uso, dentro de la carpeta descomprimida del paquete: sudo ./install.sh
 set -e
+export DEBIAN_FRONTEND=noninteractive
 
 APP=icesi-live-arena
 HERE="$(cd "$(dirname "$0")" && pwd)"
@@ -14,19 +15,19 @@ fi
 # 1. Java 17 y Nginx, solo si faltan
 if ! java -version 2>&1 | grep -qE 'version "(1[7-9]|2[0-9])'; then
     echo "[1/4] Instalando Java 17..."
-    apt-get update -q
+    apt-get update -qq
     if ! apt-cache show openjdk-17-jre-headless > /dev/null 2>&1; then
         echo "[ERROR] Este Ubuntu no ofrece openjdk-17-jre-headless; se necesita Ubuntu 22.04 o superior."
         exit 1
     fi
-    apt-get install -y -q openjdk-17-jre-headless
+    apt-get install -y -qq openjdk-17-jre-headless > /dev/null
 else
     echo "[1/4] Java 17 ya está instalado."
 fi
 if ! command -v nginx > /dev/null; then
     echo "[1/4] Instalando Nginx..."
-    apt-get update -q
-    apt-get install -y -q nginx
+    apt-get update -qq
+    apt-get install -y -qq nginx > /dev/null
 else
     echo "[1/4] Nginx ya está instalado."
 fi

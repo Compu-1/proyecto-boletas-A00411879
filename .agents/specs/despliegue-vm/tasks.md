@@ -11,7 +11,7 @@ Comandos de `codigo_base/` con `JAVA_HOME` e `ICE_HOME` exportados (`conventions
 - [x] T3: Canal WebSocket según el origen en `api.js` (paralela con T2)
 - [x] T4: Configuración de Nginx y servicio `systemd` (paralela con T2 y T3)
 - [x] T5: Scripts `package.sh` e `install.sh`
-- [ ] T6: Prueba completa en la VM de Multipass
+- [x] T6: Prueba completa en la VM de Multipass
 - [ ] T7: Pasos de despliegue en el README
 - [ ] T8: Cierre
 
@@ -58,12 +58,12 @@ Comandos de `codigo_base/` con `JAVA_HOME` e `ICE_HOME` exportados (`conventions
 ## T6: Prueba completa en la VM de Multipass
 - **Archivos**: los de T2 a T5 si algo falla
 - **Acciones**:
-  - [ ] Instalar Multipass (`brew install --cask multipass`, D-048) y crear `multipass launch 24.04 --name arena`.
-  - [ ] Copiar el paquete (`multipass transfer`), descomprimir y correr `sudo ./install.sh` en la VM limpia; correrlo una segunda vez sin errores (RN-03).
-  - [ ] Confirmar que el WebSocket de Ice acepta la ruta `/ws` reescrita por Nginx; si no, ajustar (riesgo del plan) y registrar la decisión.
-  - [ ] Recorrer la tabla "Pruebas" del plan: HU-14 (dirección y ruta inexistente, dos ventanas, compra completa, `date` y cuenta de 88 a 90 s, servicio detenido) y HU-15 (`multipass restart arena` en máximo 60 s, `systemctl kill -s KILL` y recarga a los 10 s, 90 disponibles tras reiniciar).
-- **Verificación**: [ ] todos los escenarios de la tabla observados · [ ] `/var/www/icesi-live-arena/` solo tiene `index.html` y `bundle.*.js`
-- **Commit**: `fix(deploy): <ajuste>` solo si hubo cambios
+  - [x] Instalar Multipass (`brew install --cask multipass`, D-048) y crear `multipass launch 24.04 --name arena`.
+  - [x] Copiar el paquete (`multipass transfer`), descomprimir y correr `sudo ./install.sh` en la VM limpia; correrlo una segunda vez sin errores (RN-03).
+  - [x] Confirmar que el WebSocket de Ice acepta la ruta `/ws` reescrita por Nginx; si no, ajustar (riesgo del plan) y registrar la decisión.
+  - [x] Recorrer la tabla "Pruebas" del plan: HU-14 (dirección y ruta inexistente, dos ventanas, compra completa, `date` y cuenta de 88 a 90 s, servicio detenido) y HU-15 (`multipass restart arena` en máximo 60 s, `systemctl kill -s KILL` y recarga a los 10 s, 90 disponibles tras reiniciar).
+- **Verificación**: [x] todos los escenarios de la tabla observados · [x] `/var/www/icesi-live-arena/` solo tiene `index.html` y `bundle.*.js`
+- **Commit**: `fix(client-js): sirve el bundle con ruta absoluta y usa /ws solo en el puerto 80` y `fix(deploy): silencia apt y los metadatos de macOS`
 - [ ] Al terminar: `multipass delete --purge arena` si el usuario lo pide
 
 ## T7: Pasos de despliegue en el README
