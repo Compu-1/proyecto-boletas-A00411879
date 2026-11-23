@@ -5,3 +5,7 @@ docs/*.aux
 docs/*.log
 docs/*.out
 docs/*.synctex.gz
+
+# Frontend: dependencias y salida de compilación
+client-js/node_modules/
+client-js/dist/

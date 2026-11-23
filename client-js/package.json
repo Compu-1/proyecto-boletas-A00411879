@@ -1,0 +1,18 @@
+{
+  "name": "icesi-live-arena-client",
+  "version": "1.0.0",
+  "description": "Taquilla web de Icesi Live Arena (JavaScript vainilla + Webpack)",
+  "private": true,
+  "scripts": {
+    "start": "webpack serve --mode development",
+    "build": "webpack --mode production"
+  },
+  "devDependencies": {
+    "css-loader": "7.1.5",
+    "html-webpack-plugin": "5.6.8",
+    "style-loader": "4.0.0",
+    "webpack": "5.113.0",
+    "webpack-cli": "7.3.1",
+    "webpack-dev-server": "6.1.0"
+  }
+}

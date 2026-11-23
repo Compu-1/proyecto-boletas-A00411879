@@ -6,8 +6,8 @@ Comandos de `client-js/` desde esa carpeta; para verificar contra el sistema rea
 
 ## Resumen
 
-- [ ] T1: Documentos del spec en la rama
-- [ ] T2: Proyecto npm con Webpack y página vacía
+- [x] T1: Documentos del spec en la rama
+- [x] T2: Proyecto npm con Webpack y página vacía
 - [ ] T3: Clases Slice y conexión por WebSocket
 - [ ] T4: Estado y formato de precios (paralela con T3)
 - [ ] T5: Componentes del encabezado y de la conexión
@@ -18,17 +18,17 @@ Comandos de `client-js/` desde esa carpeta; para verificar contra el sistema rea
 - **Rama**: ya creada con `git flow feature start tooling-webpack`
 - **Archivos**: `.agents/specs/tooling-webpack/` (spec, plan, tasks), `.agents/memory/decisions.md`, `.agents/memory/epics.md`
 - **Acciones**:
-  - [ ] Commit con spec y plan aprobados, tareas, decisiones D-016 a D-019 y HU-04 y HU-05 en `epics.md`.
+  - [x] Commit con spec y plan aprobados, tareas, decisiones D-016 a D-019 y HU-04 y HU-05 en `epics.md`.
 - **Verificación**: [ ] `git status --short` vacío
 - **Commit**: `docs(agents): aprueba spec y plan de tooling-webpack`
 
 ## T2: Proyecto npm con Webpack y página vacía
 - **Archivos**: `client-js/package.json`, `client-js/webpack.config.js`, `client-js/src/index.html`, `client-js/src/css/main.css`, `client-js/src/js/app.js` (crear); `.gitignore` (modificar)
 - **Acciones**:
-  - [ ] Crear `package.json` con los scripts `start` y `build` y las dependencias de D-019 (sin `ice` ni `slice2js` aún); instalar con `npm install` y versionar `package-lock.json`.
-  - [ ] Escribir `webpack.config.js` con los 4 pilares de `conventions/frontend.md` y dev server en el puerto 3000.
-  - [ ] Crear `index.html` semántico (cabecera, franja de conexión, `main` vacío), `main.css` con los tokens de `designs/ui.md` en `:root` y un `app.js` que solo importa el CSS.
-  - [ ] Ignorar en `.gitignore` `client-js/node_modules/` y `client-js/dist/`.
+  - [x] Crear `package.json` con los scripts `start` y `build` y las dependencias de D-019 (sin `ice` ni `slice2js` aún); instalar con `npm install` y versionar `package-lock.json`.
+  - [x] Escribir `webpack.config.js` con los 4 pilares de `conventions/frontend.md` y dev server en el puerto 3000.
+  - [x] Crear `index.html` semántico (cabecera, franja de conexión, `main` vacío), `main.css` con los tokens de `designs/ui.md` en `:root` y un `app.js` que solo importa el CSS.
+  - [x] Ignorar en `.gitignore` `client-js/node_modules/` y `client-js/dist/`.
 - **Verificación**: [ ] `npm run build` genera `dist/` · [ ] manual: `npm start` y `http://localhost:3000` muestra la página negra sin errores en consola; si Webpack falla con Node 25, probar con Node 22 y anotarlo en `stack.md`
 - **Commit**: `chore(client-js): crea proyecto npm con Webpack`
 
