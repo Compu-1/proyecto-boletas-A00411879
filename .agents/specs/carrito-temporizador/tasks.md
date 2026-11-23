@@ -6,9 +6,9 @@ Comandos de `codigo_base/` con `JAVA_HOME` e `ICE_HOME` exportados (`conventions
 
 ## Resumen
 
-- [ ] T1: Rama y documentos del spec
-- [ ] T2: Pruebas JUnit de quitar una silla (paralela con T3)
-- [ ] T3: Capa `api` y `store` (paralela con T2)
+- [x] T1: Rama y documentos del spec
+- [x] T2: Pruebas JUnit de quitar una silla (paralela con T3)
+- [x] T3: Capa `api` y `store` (paralela con T2)
 - [ ] T4: Funciones puras `seats.js` y migración del plano y los contadores
 - [ ] T5: Carrito `Cart` con su página y estilos
 - [ ] T6: Conexión en `app.js` y verificación en dos ventanas
@@ -16,28 +16,28 @@ Comandos de `codigo_base/` con `JAVA_HOME` e `ICE_HOME` exportados (`conventions
 
 ## T1: Rama y documentos del spec
 - **Rama**: `git flow feature start carrito-temporizador` (desde `develop`)
-- **Archivos**: `.agents/specs/carrito-temporizador/` (spec, plan, tasks), `.agents/memory/decisions.md`, `.agents/memory/epics.md`, `.agents/designs/ui.md`
+- **Archivos**: `.agents/specs/carrito-temporizador/` (spec, plan, tasks), `.agents/memory/decisions.md`, `.agents/memory/epics.md`, `.agents/designs/ui.md`, `.agents/designs/mockup.html`
 - **Acciones**:
-  - [ ] Commit con spec y plan aprobados, tareas, decisiones D-030 a D-035 y HU-08 a HU-10 en `epics.md`.
-  - [ ] En `ui.md`, quitar la mecha: gesto 1, la línea de la composición, la fila `FuseBar` de componentes y la mención en "Movimiento".
-- **Verificación**: [ ] `git status --short` vacío · [ ] `grep -in 'mecha\|fusebar' .agents/designs/ui.md` vacío
+  - [x] Commit con spec y plan aprobados, tareas, decisiones D-030 a D-035 y HU-08 a HU-10 en `epics.md`.
+  - [x] En `ui.md`, quitar la mecha (también en `mockup.html`): gesto 1, la línea de la composición, la fila `FuseBar` de componentes y la mención en "Movimiento".
+- **Verificación**: [x] `git status --short` vacío · [x] `grep -in 'mecha\|fusebar' .agents/designs/ui.md` vacío
 - **Commit**: `docs(agents): aprueba spec y plan de carrito-temporizador`
 
 ## T2: Pruebas JUnit de quitar una silla (paralela con T3)
 - **Archivos**: `codigo_base/server/src/test/java/co/icesi/booking/server/BookingServiceImplTest.java` (modificar)
 - **Acciones**:
-  - [ ] Agregar `hu10_quitarPropia_otroLaRetiene`: tras `releaseSeat` del dueño, la silla se ve disponible y otro comprador la retiene (HU-10: quitar una silla y los demás la ven liberada).
-  - [ ] Agregar `hu10_quitarVencidaYaTomada_noLibera`: con el reloj controlable de la prueba, la retención vence, otro comprador la toma y `releaseSeat` del primero devuelve `false` sin quitársela al nuevo dueño (HU-10: quitar sin conexión / ya vencida).
-- **Verificación**: [ ] `./gradlew build` · [ ] `./gradlew :server:test --tests 'co.icesi.booking.server.BookingServiceImplTest'`
+  - [x] Agregar `hu10_quitarPropia_otroLaRetiene`: tras `releaseSeat` del dueño, la silla se ve disponible y otro comprador la retiene (HU-10: quitar una silla y los demás la ven liberada).
+  - [x] Agregar `hu10_quitarVencidaYaTomada_noLibera`: con el reloj controlable de la prueba, la retención vence, otro comprador la toma y `releaseSeat` del primero devuelve `false` sin quitársela al nuevo dueño (HU-10: quitar sin conexión / ya vencida).
+- **Verificación**: [x] `./gradlew build` · [x] `./gradlew :server:test --tests 'co.icesi.booking.server.BookingServiceImplTest'`
 - **Commit**: `test(server): cubre quitar una silla propia o vencida`
 
 ## T3: Capa `api` y `store` (paralela con T2)
 - **Archivos**: `client-js/src/js/api.js`, `client-js/src/js/store.js` (modificar)
 - **Acciones**:
-  - [ ] En `api.js`, hacer que `getSeats()` agregue `expiresAt` a cada silla (`lockTimestamp + lockDurationSeconds * 1000`, con `Ice.Long` pasado a número; `0` si no está retenida) (D-031).
-  - [ ] En `api.js`, agregar `releaseSeat(seatId, clientId)` que devuelve vacío o lanza `Error`; pasa por `translate`.
-  - [ ] En `store.js`, agregar `now` (inicia en `Date.now()`) y `releasedSeats: new Set()`.
-- **Verificación**: [ ] `npm run build` · [ ] manual: retener una silla y ver en la consola que `getState().seats` trae `expiresAt` unos 90 s adelante de `Date.now()`
+  - [x] En `api.js`, hacer que `getSeats()` agregue `expiresAt` a cada silla (`lockTimestamp + lockDurationSeconds * 1000`, con `Ice.Long` pasado a número; `0` si no está retenida) (D-031).
+  - [x] En `api.js`, agregar `releaseSeat(seatId, clientId)` que devuelve vacío o lanza `Error`; pasa por `translate`.
+  - [x] En `store.js`, agregar `now` (inicia en `Date.now()`) y `releasedSeats: new Set()`.
+- **Verificación**: [x] `npm run build` · [x] manual: retener una silla y ver en la consola que `getState().seats` trae `expiresAt` unos 90 s adelante de `Date.now()`
 - **Commit**: `feat(client-js): agrega expiración y liberación de sillas en api y store`
 
 ## T4: Funciones puras `seats.js` y migración del plano y los contadores
