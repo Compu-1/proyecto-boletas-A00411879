@@ -28,6 +28,9 @@ const state = {
   pendingSeats: new Set(), // ids con una retención en curso
   now: Date.now(), // ms epoch; lo actualiza el reloj de app.js para las cuentas regresivas (D-032)
   releasedSeats: new Set(), // ids que el comprador quitó y la consulta aún no confirma (D-034)
+  checkout: null, // pago abierto: { items: [{ id, zone, price }], sending, error } (D-038, D-040)
+  receipt: null, // comprobante del último pago: { code, items, total, name, email } (D-042)
+  bookings: [], // compras confirmadas: [{ code, seatIds, total, name, email, timestamp }] (D-041)
 };
 const listeners = new Set();
 
