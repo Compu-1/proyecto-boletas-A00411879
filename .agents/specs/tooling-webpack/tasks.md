@@ -11,7 +11,7 @@ Comandos de `client-js/` desde esa carpeta; para verificar contra el sistema rea
 - [x] T3: Clases Slice y conexión por WebSocket
 - [x] T4: Estado y formato de precios (paralela con T3)
 - [x] T5: Componentes del encabezado y de la conexión
-- [ ] T6: Conexión de todo y aviso sin conexión
+- [x] T6: Conexión de todo y aviso sin conexión
 - [ ] T7: Cierre
 
 ## T1: Documentos del spec en la rama
@@ -61,9 +61,9 @@ Comandos de `client-js/` desde esa carpeta; para verificar contra el sistema rea
 ## T6: Conexión de todo y aviso sin conexión
 - **Archivos**: `client-js/src/js/app.js` (modificar)
 - **Acciones**:
-  - [ ] Armar los componentes, suscribirlos al store y repintar en cada cambio de estado.
-  - [ ] Al cargar: `connect` y `getEventInfo` dentro de `try/catch`; con éxito el estado pasa a `online` con el evento; con error, a `offline`.
-  - [ ] En `onDisconnect`, pasar a `offline` conservando `event` (RN-06).
+  - [x] Armar los componentes, suscribirlos al store y repintar en cada cambio de estado.
+  - [x] Al cargar: `connect` y `getEventInfo` dentro de `try/catch`; con éxito el estado pasa a `online` con el evento; con error, a `offline`.
+  - [x] En `onDisconnect`, pasar a `offline` conservando `event` (RN-06).
 - **Verificación**: [ ] `npm run build` · [ ] manual, las 6 filas de HU-04 y HU-05 de `plan.md` (desarrollo, entrega con `python3 -m http.server 8080 -d dist`, dos ventanas, sistema apagado, apagado con la página abierta, recarga) · [ ] `grep -rn "120000\|Manuelita" client-js/src` vacío
 - **Commit**: `feat(client-js): muestra el evento y avisa la falta de conexión`
 

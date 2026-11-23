@@ -1,13 +1,28 @@
 import '../css/main.css';
 import { connect, getEventInfo } from './api.js';
+import { getState, setState, subscribe } from './store.js';
+import { EventHeader } from './components/EventHeader.js';
+import { ConnectionBanner } from './components/ConnectionBanner.js';
 
-// Prueba mínima de conexión (T3); T6 la reemplaza por el flujo real
+const eventHeader = EventHeader(document.getElementById('event-header'));
+const connectionBanner = ConnectionBanner(document.getElementById('connection-banner'));
+
+function render(state) {
+  eventHeader.render(state);
+  connectionBanner.render(state);
+}
+
 async function start() {
+  subscribe(render);
+  render(getState());
   try {
-    await connect({ onDisconnect: () => console.log('[ice] conexión cerrada') });
-    console.log('[ice] evento:', JSON.stringify(await getEventInfo()));
+    // Si la conexión se pierde después, se avisa pero se conserva el evento que ya se veía
+    await connect({ onDisconnect: () => setState({ connection: 'offline' }) });
+    const event = await getEventInfo();
+    setState({ connection: 'online', event });
   } catch (error) {
-    console.error('[ice] error:', error.message);
+    console.error(error.message);
+    setState({ connection: 'offline' });
   }
 }
 

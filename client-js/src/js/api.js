@@ -27,6 +27,10 @@ export async function connect({ onDisconnect }) {
   const initData = new Ice.InitializationData();
   initData.properties = Ice.createProperties();
   initData.properties.setProperty('Ice.Override.ConnectTimeout', String(TIMEOUT_MS));
+  // ACM: por defecto Ice cierra la conexión ociosa a los 60 s y la taquilla mostraría "Sin conexión"
+  // con el servidor vivo. Sin cierre por inactividad y con latidos cada 30 s (Always = 3).
+  initData.properties.setProperty('Ice.ACM.Client.Close', '0');
+  initData.properties.setProperty('Ice.ACM.Client.Heartbeat', '3');
   communicator = Ice.initialize(initData);
 
   const base = communicator
