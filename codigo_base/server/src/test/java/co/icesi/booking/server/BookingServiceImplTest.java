@@ -1,6 +1,7 @@
 package co.icesi.booking.server;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -15,10 +16,13 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.junit.Before;
 import org.junit.Test;
 
+import BookingApp.BookingRecord;
+import BookingApp.EventInfo;
 import BookingApp.LockResult;
 import BookingApp.Seat;
 import BookingApp.SeatNotAvailableException;
 import BookingApp.SeatState;
+import BookingApp.SeatZone;
 
 public class BookingServiceImplTest {
 
@@ -143,5 +147,82 @@ public class BookingServiceImplTest {
         assertEquals(80, service.getEventInfo(null).availableSeats);
         assertEquals(10, service.getEventInfo(null).lockedSeats);
         assertEquals(0, service.getEventInfo(null).bookedSeats);
+    }
+
+    // Suma de sillas por estado en una lista; cada silla cuenta una sola vez (RN-07)
+    private int countByState(Seat[] seats, SeatState state) {
+        int count = 0;
+        for (Seat seat : seats) {
+            if (seat.state == state) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private Seat find(Seat[] seats, String seatId) {
+        for (Seat seat : seats) {
+            if (seat.id.equals(seatId)) {
+                return seat;
+            }
+        }
+        throw new AssertionError("no aparece la silla " + seatId);
+    }
+
+    // HU-03: Estado de la silla a los 89 s (retenida) y a los 90 s (disponible) en toda consulta
+    @Test
+    public void hu03_estadoSegunTiempo() throws Exception {
+        service.lockSeat("A-1", "Ana", null);
+
+        now.addAndGet(89_000L);
+        assertEquals(SeatState.LOCKED, service.getSeat("A-1", null).state);
+        assertEquals(SeatState.LOCKED, find(service.getAllSeats(null), "A-1").state);
+        EventInfo at89 = service.getEventInfo(null);
+        assertEquals(89, at89.availableSeats);
+        assertEquals(1, at89.lockedSeats);
+        assertEquals(0, at89.bookedSeats);
+
+        now.addAndGet(1_000L);
+        Seat at90 = service.getSeat("A-1", null);
+        assertEquals(SeatState.AVAILABLE, at90.state);
+        assertEquals("", at90.lockedByClientId);
+        assertEquals(0L, at90.lockTimestamp);
+        Seat[] all = service.getAllSeats(null);
+        assertEquals(SeatState.AVAILABLE, find(all, "A-1").state);
+        assertEquals(90, countByState(all, SeatState.AVAILABLE));
+        assertEquals(SeatState.AVAILABLE, find(service.getSeatsByZone(SeatZone.ZONEVIP, null), "A-1").state);
+        EventInfo at90Info = service.getEventInfo(null);
+        assertEquals(90, at90Info.availableSeats);
+        assertEquals(0, at90Info.lockedSeats);
+        assertEquals(0, at90Info.bookedSeats);
+    }
+
+    // HU-03: El comprador original pierde la silla vencida
+    @Test
+    public void hu03_originalPierde() throws Exception {
+        service.lockSeat("A-1", "Ana", null);
+        assertEquals(1, service.getMyLockedSeats("Ana", null).length);
+
+        now.addAndGet(LOCK_MILLIS);
+
+        assertEquals(0, service.getMyLockedSeats("Ana", null).length);
+    }
+
+    // D3 (RN-07): cada consulta devuelve una foto propia, no las instancias internas
+    @Test
+    public void hu03_consultasDevuelvenCopias() throws Exception {
+        service.lockSeat("A-1", "Ana", null);
+
+        assertNotSame(service.getSeat("A-1", null), service.getSeat("A-1", null));
+        assertNotSame(find(service.getAllSeats(null), "A-1"), find(service.getAllSeats(null), "A-1"));
+        assertNotSame(find(service.getSeatsByZone(SeatZone.ZONEVIP, null), "A-1"),
+                find(service.getSeatsByZone(SeatZone.ZONEVIP, null), "A-1"));
+        assertNotSame(service.getMyLockedSeats("Ana", null)[0], service.getMyLockedSeats("Ana", null)[0]);
+        assertNotSame(service.getEventInfo(null), service.getEventInfo(null));
+
+        service.confirmBooking(new String[] {"A-1"}, "Ana", "Ana Pérez", "ana@correo.com", null);
+        BookingRecord first = service.getMyBookings("Ana", null)[0];
+        first.totalAmount = 1.0;
+        assertEquals(120000.0, service.getMyBookings("Ana", null)[0].totalAmount, 0.0);
     }
 }

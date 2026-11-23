@@ -95,6 +95,18 @@ public class BookingServiceImpl implements BookingService {
         return elapsedMillis >= seat.lockDurationSeconds * 1000L;
     }
 
+    // Foto de la silla para las consultas: una retención vencida se ve disponible (D2) y
+    // se devuelve una copia, nunca la instancia interna, porque Ice serializa fuera del candado (D3)
+    private Seat viewOf(Seat seat) {
+        Seat view = seat.clone();
+        if (isLockExpired(seat)) {
+            view.state = SeatState.AVAILABLE;
+            view.lockedByClientId = "";
+            view.lockTimestamp = 0L;
+        }
+        return view;
+    }
+
     private void updateEventCounters() {
         int avail = 0;
         int locked = 0;
@@ -117,12 +129,15 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public synchronized EventInfo getEventInfo(Current current) {
         updateEventCounters();
-        return eventInfo;
+        return eventInfo.clone();
     }
 
     @Override
     public synchronized Seat[] getAllSeats(Current current) {
-        List<Seat> list = new ArrayList<>(seatsMap.values());
+        List<Seat> list = new ArrayList<>();
+        for (Seat s : seatsMap.values()) {
+            list.add(viewOf(s));
+        }
         list.sort(Comparator.comparing((Seat s) -> s.row).thenComparingInt(s -> s.number));
         return list.toArray(new Seat[0]);
     }
@@ -132,7 +147,7 @@ public class BookingServiceImpl implements BookingService {
         List<Seat> list = new ArrayList<>();
         for (Seat s : seatsMap.values()) {
             if (s.zone == zone) {
-                list.add(s);
+                list.add(viewOf(s));
             }
         }
         list.sort(Comparator.comparing((Seat s) -> s.row).thenComparingInt(s -> s.number));
@@ -145,7 +160,7 @@ public class BookingServiceImpl implements BookingService {
         if (seat == null) {
             throw new SeatNotFoundException("Silla no encontrada en inventario: " + seatId);
         }
-        return seat;
+        return viewOf(seat);
     }
 
     @Override
@@ -290,8 +305,9 @@ public class BookingServiceImpl implements BookingService {
         List<Seat> list = new ArrayList<>();
         if (clientId != null && !clientId.isEmpty()) {
             for (Seat s : seatsMap.values()) {
-                if (s.state == SeatState.LOCKED && clientId.equals(s.lockedByClientId) && !isLockExpired(s)) {
-                    list.add(s);
+                Seat view = viewOf(s);
+                if (view.state == SeatState.LOCKED && clientId.equals(view.lockedByClientId)) {
+                    list.add(view);
                 }
             }
         }
@@ -304,7 +320,7 @@ public class BookingServiceImpl implements BookingService {
         if (clientId != null && !clientId.isEmpty()) {
             for (BookingRecord b : bookingsList) {
                 if (clientId.equals(b.clientId)) {
-                    list.add(b);
+                    list.add(b.clone());
                 }
             }
         }

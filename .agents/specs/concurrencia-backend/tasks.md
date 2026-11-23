@@ -9,7 +9,7 @@ Comandos desde `codigo_base/`, con `JAVA_HOME` e `ICE_HOME` exportados (`convent
 - [x] T1: Documentos del spec en la rama
 - [x] T2: Reloj inyectable y vencimiento exacto a los 90 s
 - [x] T3: Exclusión mutua en las operaciones del servicio
-- [ ] T4: Consultas con estado efectivo y copias
+- [x] T4: Consultas con estado efectivo y copias
 - [ ] T5: Pago todo o nada
 - [ ] T6: Cierre
 
@@ -43,9 +43,9 @@ Comandos desde `codigo_base/`, con `JAVA_HOME` e `ICE_HOME` exportados (`convent
 ## T4: Consultas con estado efectivo y copias
 - **Archivos**: `BookingServiceImpl.java` (modificar), `BookingServiceImplTest.java` (modificar)
 - **Acciones**:
-  - [ ] Escribir `hu03_estadoSegunTiempo` (89 s retenida y 90 s disponible, con contadores del aforo) y `hu03_originalPierde`; verlas en rojo.
-  - [ ] Agregar el método privado `viewOf(Seat)` que copia la silla y la muestra disponible si su retención venció (D2, D3).
-  - [ ] Usar `viewOf` en `getAllSeats`, `getSeatsByZone`, `getSeat` y `getMyLockedSeats`; devolver copias en `getEventInfo` y `getMyBookings`.
+  - [x] Escribir `hu03_estadoSegunTiempo` (89 s retenida y 90 s disponible, con contadores del aforo) y `hu03_originalPierde`; verlas en rojo.
+  - [x] Agregar el método privado `viewOf(Seat)` que copia la silla y la muestra disponible si su retención venció (D2, D3).
+  - [x] Usar `viewOf` en `getAllSeats`, `getSeatsByZone`, `getSeat` y `getMyLockedSeats`; devolver copias en `getEventInfo` y `getMyBookings`.
 - **Verificación**: [ ] `./gradlew build` · [ ] prueba de la clase en verde
 - **Commit**: `fix(server): libera a la vista las retenciones vencidas y devuelve copias`
 
