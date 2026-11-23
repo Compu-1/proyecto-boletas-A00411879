@@ -1,6 +1,7 @@
 package co.icesi.booking.server;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -21,6 +22,7 @@ import BookingApp.BookingException;
 import BookingApp.BookingRecord;
 import BookingApp.BookingResult;
 import BookingApp.EventInfo;
+import BookingApp.InvalidBookingException;
 import BookingApp.LockResult;
 import BookingApp.Seat;
 import BookingApp.SeatNotAvailableException;
@@ -385,5 +387,107 @@ public class BookingServiceImplTest {
             assertEquals(row[0], "Ana", a1.lockedByClientId);
             assertEquals(row[0], booked, countByState(service.getAllSeats(null), SeatState.BOOKED));
         }
+    }
+
+    // Paga y devuelve el mensaje del rechazo; falla si el pago se acepta
+    private String rejectionOf(String[] seatIds, String clientId, String name, String email) throws Exception {
+        try {
+            service.confirmBooking(seatIds, clientId, name, email, null);
+        } catch (InvalidBookingException e) {
+            return e.reason;
+        }
+        fail("el pago debía rechazarse");
+        return null;
+    }
+
+    // HU-11: Datos de contacto inválidos: no se vende nada y la retención queda igual
+    @Test
+    public void hu11_datosInvalidos_mensaje() throws Exception {
+        String[][] cases = {
+            {"", "ana@correo.com", "Escribe tu nombre"},
+            {"   ", "ana@correo.com", "Escribe tu nombre"},
+            {"Ana Pérez", "", "Escribe un correo válido"},
+            {"Ana Pérez", "ana@", "Escribe un correo válido"},
+            {"Ana Pérez", "ana.correo.com", "Escribe un correo válido"},
+            {"Ana Pérez", "ana @correo.com", "Escribe un correo válido"},
+        };
+        service.lockSeat("A-1", "Ana", null);
+        long lockedAt = service.getSeat("A-1", null).lockTimestamp;
+
+        for (String[] row : cases) {
+            String label = "'" + row[0] + "' / '" + row[1] + "'";
+            assertEquals(label, row[2], rejectionOf(new String[] {"A-1"}, "Ana", row[0], row[1]));
+            Seat a1 = service.getSeat("A-1", null);
+            assertEquals(label, SeatState.LOCKED, a1.state);
+            assertEquals(label, "Ana", a1.lockedByClientId);
+            assertEquals(label, lockedAt, a1.lockTimestamp);
+        }
+        assertEquals(0, service.getMyBookings("Ana", null).length);
+    }
+
+    // HU-11: Pagar sin sillas
+    @Test
+    public void hu11_sinSillas_mensaje() throws Exception {
+        assertEquals("Elige al menos una silla para pagar",
+                rejectionOf(new String[0], "Ana", "Ana Pérez", "ana@correo.com"));
+        assertEquals(0, service.getMyBookings("Ana", null).length);
+    }
+
+    // HU-12: Un pedido con una silla repetida se rechaza completo (defecto 1)
+    @Test
+    public void hu12_sillaRepetida_rechaza() throws Exception {
+        service.lockSeat("A-1", "Ana", null);
+
+        assertEquals("La silla A-1 está repetida en el pedido",
+                rejectionOf(new String[] {"A-1", "A-1"}, "Ana", "Ana Pérez", "ana@correo.com"));
+
+        assertEquals(0, service.getMyBookings("Ana", null).length);
+        Seat a1 = service.getSeat("A-1", null);
+        assertEquals(SeatState.LOCKED, a1.state);
+        assertEquals("Ana", a1.lockedByClientId);
+    }
+
+    // HU-12: Cada pago tiene su propio código
+    @Test
+    public void hu12_codigosDistintos() throws Exception {
+        service.lockSeat("A-1", "Ana", null);
+        String first = pay("Ana", "A-1").bookingCode;
+        service.lockSeat("C-2", "Ana", null);
+        String second = pay("Ana", "C-2").bookingCode;
+
+        assertTrue(second, second.matches("RES-[0-9A-F]{8}"));
+        assertNotEquals(first, second);
+    }
+
+    // HU-13: Cada comprador ve solo sus compras, con código, sillas, total, nombre y correo
+    @Test
+    public void hu13_misCompras_soloLasMias() throws Exception {
+        service.lockSeat("A-1", "Ana", null);
+        service.lockSeat("F-3", "Ana", null);
+        String first = pay("Ana", "A-1", "F-3").bookingCode;
+        service.lockSeat("C-2", "Ana", null);
+        String second = pay("Ana", "C-2").bookingCode;
+        service.lockSeat("D-4", "Beto", null);
+        String beto = pay("Beto", "D-4").bookingCode;
+
+        BookingRecord[] mine = service.getMyBookings("Ana", null);
+
+        assertEquals(2, mine.length);
+        assertEquals(first, mine[0].bookingCode);
+        assertEquals(165000.0, mine[0].totalAmount, 0.0);
+        assertEquals(2, mine[0].seatIds.length);
+        assertEquals("Ana Prueba", mine[0].customerName);
+        assertEquals("ana@correo.com", mine[0].customerEmail);
+        assertEquals(second, mine[1].bookingCode);
+        assertEquals(75000.0, mine[1].totalAmount, 0.0);
+        BookingRecord[] others = service.getMyBookings("Beto", null);
+        assertEquals(1, others.length);
+        assertEquals(beto, others[0].bookingCode);
+    }
+
+    // HU-13: Sin compras todavía
+    @Test
+    public void hu13_sinCompras_vacio() throws Exception {
+        assertEquals(0, service.getMyBookings("Ana", null).length);
     }
 }

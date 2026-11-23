@@ -3,10 +3,13 @@ package co.icesi.booking.server;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.Set;
 import java.util.function.LongSupplier;
+import java.util.regex.Pattern;
 
 import com.zeroc.Ice.Current;
 
@@ -27,6 +30,9 @@ import BookingApp.SeatZone;
 public class BookingServiceImpl implements BookingService {
 
     public static final long DEFAULT_LOCK_DURATION_SECONDS = 90;
+
+    // Correo con la forma texto@dominio.ext, sin espacios (RN-02 de checkout-reservas, D-037)
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$");
 
     private final LongSupplier clock;
     private final EventInfo eventInfo;
@@ -232,14 +238,22 @@ public class BookingServiceImpl implements BookingService {
     public synchronized BookingResult confirmBooking(String[] seatIds, String clientId, String customerName, String customerEmail, Current current)
             throws InvalidBookingException, BookingException {
 
+        // Los textos son los que ve el Comprador en la taquilla (D-037)
         if (seatIds == null || seatIds.length == 0) {
-            throw new InvalidBookingException("Debe seleccionar al menos una silla para completar la reserva.");
+            throw new InvalidBookingException("Elige al menos una silla para pagar");
         }
         if (customerName == null || customerName.trim().isEmpty()) {
-            throw new InvalidBookingException("El nombre del comprador es obligatorio.");
+            throw new InvalidBookingException("Escribe tu nombre");
         }
-        if (customerEmail == null || !customerEmail.contains("@")) {
-            throw new InvalidBookingException("El correo electrónico del comprador es inválido.");
+        if (customerEmail == null || !EMAIL_PATTERN.matcher(customerEmail.trim()).matches()) {
+            throw new InvalidBookingException("Escribe un correo válido");
+        }
+        // Una silla repetida se cobraría dos veces: se rechaza el pedido completo (RN-04)
+        Set<String> uniqueIds = new HashSet<>();
+        for (String seatId : seatIds) {
+            if (!uniqueIds.add(seatId)) {
+                throw new InvalidBookingException("La silla " + seatId + " está repetida en el pedido");
+            }
         }
 
         double totalAmount = 0.0;
