@@ -6,8 +6,8 @@ Comandos de `codigo_base/` con `JAVA_HOME` e `ICE_HOME` exportados (`conventions
 
 ## Resumen
 
-- [ ] T1: Rama y documentos del spec
-- [ ] T2: Jar ejecutable del servidor
+- [x] T1: Rama y documentos del spec
+- [x] T2: Jar ejecutable del servidor
 - [ ] T3: Canal WebSocket según el origen en `api.js` (paralela con T2)
 - [ ] T4: Configuración de Nginx y servicio `systemd` (paralela con T2 y T3)
 - [ ] T5: Scripts `package.sh` e `install.sh`
@@ -19,16 +19,16 @@ Comandos de `codigo_base/` con `JAVA_HOME` e `ICE_HOME` exportados (`conventions
 - **Rama**: `git flow feature start despliegue-vm` (desde `develop`; lleva los cambios sin commit de spec, plan, tareas, `epics.md` y `decisions.md`)
 - **Archivos**: `.agents/specs/despliegue-vm/` (spec, plan, tasks), `.agents/memory/decisions.md`, `.agents/memory/epics.md`, `.agents/conventions/git.md`
 - **Acciones**:
-  - [ ] En `git.md`, agregar el alcance `deploy` (carpeta `deploy/`).
-  - [ ] Commit con spec y plan aprobados, tareas, D-043 a D-048 y HU-14 y HU-15 en `epics.md`.
-- **Verificación**: [ ] `git status --short` vacío · [ ] `git branch --show-current` = `feature/despliegue-vm`
+  - [x] En `git.md`, agregar el alcance `deploy` (carpeta `deploy/`).
+  - [x] Commit con spec y plan aprobados, tareas, D-043 a D-048 y HU-14 y HU-15 en `epics.md`.
+- **Verificación**: [x] `git status --short` vacío · [x] `git branch --show-current` = `feature/despliegue-vm`
 - **Commit**: `docs(agents): aprueba spec y plan de despliegue-vm`
 
 ## T2: Jar ejecutable del servidor
 - **Archivos**: `codigo_base/server/build.gradle` (modificar)
 - **Acciones**:
-  - [ ] Configurar la tarea `jar`: `Main-Class` `co.icesi.booking.server.BookingServerApp`, meter las clases de `runtimeClasspath` (Ice y `common`), excluir firmas `META-INF/*.SF|*.DSA|*.RSA` y `duplicatesStrategy` para repetidos (D-045).
-- **Verificación**: [ ] `./gradlew build` · [ ] `java -jar server/build/libs/server.jar` arranca en 10000 y 10002 sin Gradle · [ ] con ese jar corriendo, `--test-concurrency` da 1
+  - [x] Configurar la tarea `jar`: `Main-Class` `co.icesi.booking.server.BookingServerApp`, meter las clases de `runtimeClasspath` (Ice y `common`), excluir firmas `META-INF/*.SF|*.DSA|*.RSA` y `duplicatesStrategy` para repetidos (D-045).
+- **Verificación**: [x] `./gradlew build` · [x] `java -jar server/build/libs/server.jar` arranca en 10000 y 10002 sin Gradle · [x] con ese jar corriendo, `--test-concurrency` da 1
 - **Commit**: `chore(server): genera un jar ejecutable con dependencias`
 
 ## T3: Canal WebSocket según el origen en `api.js` (paralela con T2)
