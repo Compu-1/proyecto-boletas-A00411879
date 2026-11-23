@@ -37,7 +37,7 @@ Reglas: grises solo derivados de negro y blanco; esquinas rectas en todo (radio 
 | Estado | Aspecto | Clic |
 | :--- | :--- | :--- |
 | Disponible | círculo con borde blanco; al pasar el mouse se llena de blanco | retener |
-| Tuya | relleno rojo | quitar del carrito |
+| Tuya | relleno rojo | nada (quitarla es del carrito) |
 | Retenida por otro | borde gris **punteado** | no |
 | Vendida | relleno `--linea`, sin borde | no |
 
@@ -46,7 +46,7 @@ Reglas: grises solo derivados de negro y blanco; esquinas rectas en todo (radio 
 ```text
 ████████████████████████████░░░░░░░░░░░░░░░  <- mecha roja (tiempo de la más próxima a vencer)
 ICESI LIVE ARENA                                      73        6        11
-CONCIERTO ICESI LIVE ROCK & POP 2026               LIBRES  RETENIDAS  VENDIDAS
+CONCIERTO ICESI LIVE ROCK & POP 2026               DISPONIBLES RETENIDAS VENDIDAS
 2026-11-28 20:00 · Auditorio Manuelita
 ──────────────────────────────────────────────────────────────────────────────
             ────────── E S C E N A R I O ──────────        ┌ TU BOLETA ─────────┐
