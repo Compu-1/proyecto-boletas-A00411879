@@ -9,7 +9,7 @@ Comandos de `codigo_base/` con `JAVA_HOME` e `ICE_HOME` exportados (`conventions
 - [x] T1: Rama y documentos del spec
 - [x] T2: Mensaje de rechazo en el servidor y sus pruebas
 - [x] T3: Capa `api` y `store` (paralela con T2)
-- [ ] T4: Plano de sillas `SeatMap` con sus estilos (paralela con T5)
+- [x] T4: Plano de sillas `SeatMap` con sus estilos (paralela con T5)
 - [ ] T5: Contadores del encabezado y `Toast` (paralela con T4)
 - [ ] T6: Conexión de todo en `app.js` y verificación en dos ventanas
 - [ ] T7: Cierre
@@ -42,9 +42,9 @@ Comandos de `codigo_base/` con `JAVA_HOME` e `ICE_HOME` exportados (`conventions
 ## T4: Plano de sillas `SeatMap` con sus estilos (paralela con T5)
 - **Archivos**: `client-js/src/js/components/SeatMap.js` (crear), `client-js/src/css/main.css` (modificar)
 - **Acciones**:
-  - [ ] Crear `SeatMap(contenedor, { onSeatClick })` con `render({ seats, clientId, pendingSeats, connection })`: escenario, zonas VIP, Platea y General con nombre y precio, filas A-I de 10 sillas con pasillo entre la 5 y la 6, y leyenda de los 4 estados.
-  - [ ] Cada silla es un `<button>`; solo las disponibles, sin retención pendiente y con conexión llaman a `onSeatClick(id)` (D-027). Textos con `textContent`.
-  - [ ] Estilos `.seat-map__*` con modificadores `--available`, `--mine`, `--other` (borde punteado), `--booked` y `--offline` (opacidad 40 %), solo con variables de `:root`.
+  - [x] Crear `SeatMap(contenedor, { onSeatClick })` con `render({ seats, clientId, pendingSeats, connection })`: escenario, zonas VIP, Platea y General con nombre y precio, filas A-I de 10 sillas con pasillo entre la 5 y la 6, y leyenda de los 4 estados.
+  - [x] Cada silla es un `<button>`; solo las disponibles, sin retención pendiente y con conexión llaman a `onSeatClick(id)` (D-027). Textos con `textContent`.
+  - [x] Estilos `.seat-map__*` con modificadores `--available`, `--mine`, `--other` (borde punteado), `--booked` y `--offline` (opacidad 40 %), solo con variables de `:root`.
 - **Verificación**: [ ] `npm run build` · [ ] `grep -nE '#[0-9A-Fa-f]{3,6}' client-js/src/css/main.css` solo coincide dentro de `:root` · [ ] manual: sembrando `setState({ seats })` desde la consola se ven los 4 estados distintos
 - **Commit**: `feat(client-js): agrega el plano de sillas`
 

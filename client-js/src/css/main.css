@@ -97,3 +97,135 @@ body {
   font-family: var(--fuente-mono);
   font-size: 1.25rem;
 }
+
+#seat-area {
+  padding: var(--e4) var(--e3);
+}
+
+.seat-map {
+  max-width: 720px;
+  margin: 0 auto;
+  transition: opacity 150ms;
+}
+
+.seat-map--offline {
+  opacity: 0.4;
+}
+
+.seat-map__stage {
+  position: relative;
+  width: 70%;
+  margin: 0 auto var(--e5);
+  padding-top: var(--e2);
+  border-top: 2px solid var(--blanco);
+  color: var(--gris);
+  font-family: var(--fuente-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.5em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* Resplandor del escenario: la misma sombra blanca atenuada con opacity, sin colores nuevos */
+.seat-map__stage::after {
+  content: "";
+  position: absolute;
+  inset: -2px 0 auto;
+  height: 2px;
+  box-shadow: 0 -14px 40px -10px var(--blanco);
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.seat-map__zone {
+  margin-bottom: var(--e4);
+}
+
+.seat-map__zone-name {
+  margin: 0 0 var(--e2) 28px;
+  color: var(--gris);
+  font-family: var(--fuente-mono);
+  font-size: 0.6875rem;
+  font-weight: normal;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.seat-map__row {
+  display: flex;
+  align-items: center;
+  gap: var(--e2);
+  margin-bottom: var(--e2);
+}
+
+.seat-map__row-letter {
+  width: 20px;
+  color: var(--gris);
+  font-family: var(--fuente-mono);
+  font-size: 0.75rem;
+}
+
+.seat-map__seat {
+  display: inline-block;
+  width: var(--silla);
+  height: var(--silla);
+  padding: 0;
+  border: 2px solid var(--blanco);
+  border-radius: 50%;
+  background: transparent;
+  transition: background 150ms;
+}
+
+/* Pasillo entre la silla 5 y la 6 */
+.seat-map__row .seat-map__seat:nth-of-type(6) {
+  margin-left: var(--e4);
+}
+
+.seat-map__seat--available:enabled {
+  cursor: pointer;
+}
+
+.seat-map__seat--available:enabled:hover {
+  background: var(--blanco);
+}
+
+.seat-map__seat--mine {
+  border-color: var(--rojo);
+  background: var(--rojo);
+}
+
+.seat-map__seat--other {
+  border-style: dashed;
+  border-color: var(--gris);
+}
+
+.seat-map__seat--booked {
+  border-color: var(--linea);
+  background: var(--linea);
+}
+
+.seat-map__seat:disabled {
+  cursor: not-allowed;
+}
+
+.seat-map__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e4);
+  margin-top: var(--e4);
+  color: var(--gris);
+  font-size: 0.75rem;
+}
+
+.seat-map__seat--sample {
+  width: 14px;
+  height: 14px;
+  margin-right: 6px;
+  vertical-align: -3px;
+}
+
+@media (max-width: 600px) {
+  :root {
+    --silla: 22px;
+  }
+}
