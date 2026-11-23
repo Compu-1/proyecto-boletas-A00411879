@@ -16,13 +16,14 @@ const STATES = { AVAILABLE: 'available', LOCKED: 'locked', BOOKED: 'booked' };
 let communicator = null;
 let proxy = null;
 
-// D-044: con `npm start` (3000) se va directo al 10002; servida por Nginx (VM), por /ws del mismo origen
+// D-044: servida por Nginx en el 80 (VM) va por /ws del mismo origen; con cualquier otro
+// puerto (`npm start` en 3000, vista previa de dist/ en 8080) va directo al 10002
 function wsEndpoint() {
   const { hostname, port } = window.location;
-  if (port === '3000') {
-    return `ws -h ${hostname} -p ${WS_PORT}`;
+  if (port === '' || port === '80') {
+    return `ws -h ${hostname} -p 80 -r /ws`;
   }
-  return `ws -h ${hostname} -p ${port || 80} -r /ws`;
+  return `ws -h ${hostname} -p ${WS_PORT}`;
 }
 
 // Errores de negocio (Slice) conservan su reason; los de red se unifican en un mensaje
