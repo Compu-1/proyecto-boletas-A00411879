@@ -9,3 +9,5 @@ Registro de HU. Lo actualiza `c-specify` al aprobar un spec (siguiente número l
 | HU-03 | Liberar automáticamente las retenciones vencidas | RF-3 | [concurrencia-backend](../specs/concurrencia-backend/spec.md) | [x] |
 | HU-04 | Abrir la taquilla y ver el evento | RF-1, RNF-3, RNF-4 | [tooling-webpack](../specs/tooling-webpack/spec.md) | [x] |
 | HU-05 | Saber que no hay conexión con la taquilla | RF-7, RNF-4 | [tooling-webpack](../specs/tooling-webpack/spec.md) | [x] |
+| HU-06 | Ver el plano de sillas y el aforo en vivo | RF-1 | [mapa-sillas](../specs/mapa-sillas/spec.md) | [ ] |
+| HU-07 | Retener una silla desde el plano | RF-2, RF-7, RNF-1 | [mapa-sillas](../specs/mapa-sillas/spec.md) | [ ] |
