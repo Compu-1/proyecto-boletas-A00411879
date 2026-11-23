@@ -13,7 +13,7 @@ Todo el cambio vive en `BookingServiceImpl`. Cada operación pública se vuelve 
 | slice | `codigo_base/common/src/main/slice/BookingService.ice` | sin cambios | ver D5 |
 | server | `codigo_base/server/src/main/java/co/icesi/booking/server/BookingServiceImpl.java` | modificar | ver detalle abajo |
 | server | `codigo_base/server/src/main/java/co/icesi/booking/server/BookingServerApp.java` | sin cambios | sigue usando el constructor sin parámetros |
-| test | `codigo_base/server/src/test/java/co/icesi/booking/server/BookingServiceImplTest.java` | crear | 11 pruebas JUnit 4, una por escenario |
+| test | `codigo_base/server/src/test/java/co/icesi/booking/server/BookingServiceImplTest.java` | crear | 12 pruebas JUnit 4, una por escenario y una de copias |
 | client-java | `codigo_base/client/.../BookingClientApp.java` | sin cambios | `--test-concurrency` queda como verificación de punta a punta |
 
 Detalle de `BookingServiceImpl`:
@@ -68,10 +68,11 @@ Todas en `BookingServiceImplTest.java`, llamando al servant directamente con `cu
 | HU-02: Pagar retenidas y vigentes | JUnit | `hu02_pagarVigentes`: `BOOKED`, código `RES-[0-9A-F]{8}`, total 240000 |
 | HU-02: Pagar dos veces en el mismo instante | JUnit | `hu02_pagoDobleSimultaneo`: 1 éxito, el otro "ya fue vendida definitivamente", `getMyBookings` con 1 registro |
 | HU-02: Otro comprador paga la misma silla a la vez | JUnit | `hu02_dosCompradoresMismaSilla`: solo Ana con código; Beto sin registros |
-| HU-02: Pago rechazado completo (4 filas) | JUnit | `hu02_sillaInvalida_noVendeNinguna`: por fila, mensaje esperado, A-1 sigue `LOCKED` por Ana, nada `BOOKED` |
+| HU-02: Pago rechazado completo (4 filas + vencida de otro) | JUnit | `hu02_sillaInvalida_noVendeNinguna`: por fila, mensaje esperado, A-1 sigue `LOCKED` por Ana, nada `BOOKED` de Ana; la 5.ª fila fija que la vencida de otro responde "no está retenida a tu nombre" |
 | HU-03: Estado a los 89 s y 90 s | JUnit | `hu03_estadoSegunTiempo`: 89 s -> retenida y contada en retenidas; 90 s -> disponible y contada en disponibles |
 | HU-03: Otro comprador retiene la vencida | JUnit | `hu03_otroRetieneVencida`: Beto obtiene A-1 |
 | HU-03: El comprador original la pierde | JUnit | `hu03_originalPierde`: `getMyLockedSeats("Ana")` vacío |
+| D3 (RN-07): consultas devuelven copias | JUnit | `hu03_consultasDevuelvenCopias`: dos llamadas seguidas devuelven instancias distintas; cambiar un registro devuelto no altera `getMyBookings` |
 
 ## Riesgos y pendientes
 

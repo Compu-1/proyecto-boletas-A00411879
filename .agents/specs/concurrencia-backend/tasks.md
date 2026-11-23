@@ -11,7 +11,7 @@ Comandos desde `codigo_base/`, con `JAVA_HOME` e `ICE_HOME` exportados (`convent
 - [x] T3: Exclusión mutua en las operaciones del servicio
 - [x] T4: Consultas con estado efectivo y copias
 - [x] T5: Pago todo o nada
-- [ ] T6: Cierre
+- [x] T6: Cierre
 
 ## T1: Documentos del spec en la rama
 - **Rama**: ya creada con `git flow feature start concurrencia-backend`
@@ -58,7 +58,7 @@ Comandos desde `codigo_base/`, con `JAVA_HOME` e `ICE_HOME` exportados (`convent
 - **Commit**: `fix(server): rechaza el pago de sillas no retenidas y vende todo o nada`
 
 ## T6: Cierre
-- [ ] `./gradlew build`, `./gradlew test` y la prueba manual `--test-concurrency` (resultado 1) en verde
-- [ ] `project_state.md`: quitar los defectos 1 a 5 y actualizar "Hoy"; `epics.md`: marcar HU-01 a HU-03; `decisions.md` si surgió algo nuevo
+- [x] `./gradlew build`, `./gradlew test` y la prueba manual `--test-concurrency` (resultado 1) en verde
+- [x] `project_state.md`: quitar los defectos 1 a 5 y actualizar "Hoy"; `epics.md`: marcar HU-01 a HU-03; `decisions.md` si surgió algo nuevo
 - **Commit**: `docs(agents): cierra concurrencia-backend`
 - [ ] `git flow feature finish concurrencia-backend` (solo si el usuario lo pide)

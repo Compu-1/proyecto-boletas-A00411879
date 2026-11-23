@@ -4,6 +4,6 @@ Registro de HU. Lo actualiza `c-specify` al aprobar un spec (siguiente número l
 
 | HU | Título | RF | Spec | Estado |
 | :--- | :--- | :--- | :--- | :--- |
-| HU-01 | Retener una silla en exclusiva | RF-2, RNF-1 | [concurrencia-backend](../specs/concurrencia-backend/spec.md) | [ ] |
-| HU-02 | Pagar sin sobreventa | RF-5, RNF-1 | [concurrencia-backend](../specs/concurrencia-backend/spec.md) | [ ] |
-| HU-03 | Liberar automáticamente las retenciones vencidas | RF-3 | [concurrencia-backend](../specs/concurrencia-backend/spec.md) | [ ] |
+| HU-01 | Retener una silla en exclusiva | RF-2, RNF-1 | [concurrencia-backend](../specs/concurrencia-backend/spec.md) | [x] |
+| HU-02 | Pagar sin sobreventa | RF-5, RNF-1 | [concurrencia-backend](../specs/concurrencia-backend/spec.md) | [x] |
+| HU-03 | Liberar automáticamente las retenciones vencidas | RF-3 | [concurrencia-backend](../specs/concurrencia-backend/spec.md) | [x] |
