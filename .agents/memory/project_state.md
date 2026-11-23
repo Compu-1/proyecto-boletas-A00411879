@@ -8,8 +8,8 @@ Actualizado: 2026-11-23. Lo actualiza la tarea de cierre de cada `tasks.md`.
 - **Frontend** (`client-js/`): proyecto npm + Webpack 5 (`npm start` en el puerto 3000, `npm run build` hacia `dist/`) con conexión Ice por WebSocket al 10002. Muestra el evento, los precios, los contadores del aforo y el plano de 90 sillas con 4 estados, que se actualiza cada 1 s (D-022); un clic en una silla disponible la retiene y los rechazos salen en un aviso. Sin conexión avisa, atenúa el plano y no reintenta. Capas `api.js` / `store.js` / `components/` / `app.js` (D-016 a D-029). Aún no hay carrito, temporizador ni pago.
 - **git flow** inicializado (`master`, `develop`). `.agents/` ya está en `develop`.
 - **Documentación**: un solo `README.md` en la raíz y un solo `docs/` (enunciado y wireframe); ver D-015.
-- **Specs cerradas**: `concurrencia-backend` (PR #1; 12 pruebas JUnit y `--test-concurrency` = 1) y `tooling-webpack` (PR #2), ya en `develop`.
-- **Spec en curso**: `mapa-sillas` implementada en `feature/mapa-sillas` (HU-06 y HU-07): 13 pruebas JUnit en verde, `--test-concurrency` = 1 y verificada a mano con dos ventanas de Chrome (cambio ajeno visible en 0,9 s, vencimiento a los 90,8 s, rechazo con aviso, sin conexión a los 0,4 s y recarga con el sistema de vuelta); falta el PR a `develop`.
+- **Specs cerradas**, ya en `develop`: `concurrencia-backend` (PR #1; 12 pruebas JUnit y `--test-concurrency` = 1), `tooling-webpack` (PR #2) y `mapa-sillas` (PR #3; 13 pruebas JUnit, verificada a mano con dos ventanas de Chrome: cambio ajeno visible en 0,9 s, vencimiento a los 90,8 s, rechazo con aviso, sin conexión a los 0,4 s y recarga con el sistema de vuelta).
+- **Spec en curso**: ninguna; sigue `carrito-temporizador` (ver "Siguiente").
 
 ## Defectos conocidos del backend
 
