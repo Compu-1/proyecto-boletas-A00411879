@@ -115,20 +115,20 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public EventInfo getEventInfo(Current current) {
+    public synchronized EventInfo getEventInfo(Current current) {
         updateEventCounters();
         return eventInfo;
     }
 
     @Override
-    public Seat[] getAllSeats(Current current) {
+    public synchronized Seat[] getAllSeats(Current current) {
         List<Seat> list = new ArrayList<>(seatsMap.values());
         list.sort(Comparator.comparing((Seat s) -> s.row).thenComparingInt(s -> s.number));
         return list.toArray(new Seat[0]);
     }
 
     @Override
-    public Seat[] getSeatsByZone(SeatZone zone, Current current) {
+    public synchronized Seat[] getSeatsByZone(SeatZone zone, Current current) {
         List<Seat> list = new ArrayList<>();
         for (Seat s : seatsMap.values()) {
             if (s.zone == zone) {
@@ -140,7 +140,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Seat getSeat(String seatId, Current current) throws SeatNotFoundException {
+    public synchronized Seat getSeat(String seatId, Current current) throws SeatNotFoundException {
         Seat seat = seatsMap.get(seatId);
         if (seat == null) {
             throw new SeatNotFoundException("Silla no encontrada en inventario: " + seatId);
@@ -149,7 +149,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public LockResult lockSeat(String seatId, String clientId, Current current)
+    public synchronized LockResult lockSeat(String seatId, String clientId, Current current)
             throws SeatNotFoundException, SeatNotAvailableException {
 
         Seat seat = seatsMap.get(seatId);
@@ -194,7 +194,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public boolean releaseSeat(String seatId, String clientId, Current current) throws SeatNotFoundException {
+    public synchronized boolean releaseSeat(String seatId, String clientId, Current current) throws SeatNotFoundException {
         Seat seat = seatsMap.get(seatId);
         if (seat == null) {
             throw new SeatNotFoundException("Silla no encontrada: " + seatId);
@@ -214,7 +214,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingResult confirmBooking(String[] seatIds, String clientId, String customerName, String customerEmail, Current current)
+    public synchronized BookingResult confirmBooking(String[] seatIds, String clientId, String customerName, String customerEmail, Current current)
             throws InvalidBookingException, BookingException {
 
         if (seatIds == null || seatIds.length == 0) {
@@ -286,7 +286,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Seat[] getMyLockedSeats(String clientId, Current current) {
+    public synchronized Seat[] getMyLockedSeats(String clientId, Current current) {
         List<Seat> list = new ArrayList<>();
         if (clientId != null && !clientId.isEmpty()) {
             for (Seat s : seatsMap.values()) {
@@ -299,7 +299,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingRecord[] getMyBookings(String clientId, Current current) {
+    public synchronized BookingRecord[] getMyBookings(String clientId, Current current) {
         List<BookingRecord> list = new ArrayList<>();
         if (clientId != null && !clientId.isEmpty()) {
             for (BookingRecord b : bookingsList) {
@@ -312,7 +312,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public void resetSeats(Current current) {
+    public synchronized void resetSeats(Current current) {
         initSeats();
         System.out.println("[RESET] Inventario y reservas reiniciadas a estado de fábrica.");
     }

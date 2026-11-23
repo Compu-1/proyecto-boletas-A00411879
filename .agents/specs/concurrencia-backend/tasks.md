@@ -8,7 +8,7 @@ Comandos desde `codigo_base/`, con `JAVA_HOME` e `ICE_HOME` exportados (`convent
 
 - [x] T1: Documentos del spec en la rama
 - [x] T2: Reloj inyectable y vencimiento exacto a los 90 s
-- [ ] T3: Exclusión mutua en las operaciones del servicio
+- [x] T3: Exclusión mutua en las operaciones del servicio
 - [ ] T4: Consultas con estado efectivo y copias
 - [ ] T5: Pago todo o nada
 - [ ] T6: Cierre
@@ -35,8 +35,8 @@ Comandos desde `codigo_base/`, con `JAVA_HOME` e `ICE_HOME` exportados (`convent
 ## T3: Exclusión mutua en las operaciones del servicio
 - **Archivos**: `BookingServiceImpl.java` (modificar), `BookingServiceImplTest.java` (modificar)
 - **Acciones**:
-  - [ ] Escribir `hu01_mismaSillaMismoInstante_ganaUno` (2, 10 y 50 hilos) y `hu01_sillasDistintas_todosGanan` con hilos soltados a la vez (`ExecutorService` y `CountDownLatch`); ver el primero en rojo.
-  - [ ] Marcar `synchronized` las 10 operaciones públicas del servicio (D1), conservando el `Thread.sleep(25)` de `lockSeat`.
+  - [x] Escribir `hu01_mismaSillaMismoInstante_ganaUno` (2, 10 y 50 hilos) y `hu01_sillasDistintas_todosGanan` con hilos soltados a la vez (`ExecutorService` y `CountDownLatch`); ver el primero en rojo.
+  - [x] Marcar `synchronized` las 10 operaciones públicas del servicio (D1), conservando el `Thread.sleep(25)` de `lockSeat`.
 - **Verificación**: [ ] `./gradlew build` · [ ] prueba de la clase en verde, repetida 3 veces · [ ] manual: servidor con `./gradlew runServer`, luego `./gradlew :client:runClient --args="--test-concurrency"` debe mostrar `Peticiones que creyeron ganar el bloqueo : 1`
 - **Commit**: `fix(server): sincroniza el servicio para evitar la doble retención`
 
