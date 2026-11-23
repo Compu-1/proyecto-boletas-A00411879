@@ -9,7 +9,7 @@ Comandos de `client-js/` desde esa carpeta; para verificar contra el sistema rea
 - [x] T1: Documentos del spec en la rama
 - [x] T2: Proyecto npm con Webpack y página vacía
 - [x] T3: Clases Slice y conexión por WebSocket
-- [ ] T4: Estado y formato de precios (paralela con T3)
+- [x] T4: Estado y formato de precios (paralela con T3)
 - [ ] T5: Componentes del encabezado y de la conexión
 - [ ] T6: Conexión de todo y aviso sin conexión
 - [ ] T7: Cierre
@@ -44,8 +44,8 @@ Comandos de `client-js/` desde esa carpeta; para verificar contra el sistema rea
 ## T4: Estado y formato de precios (paralela con T3)
 - **Archivos**: `client-js/src/js/store.js`, `client-js/src/js/format.js` (crear)
 - **Acciones**:
-  - [ ] Crear `store.js` con estado inicial `{ connection: 'connecting', event: null }` y `getState`, `setState`, `subscribe`.
-  - [ ] Crear `format.js` con `formatPrice(valor)` que devuelve pesos con punto de miles y sin decimales.
+  - [x] Crear `store.js` con estado inicial `{ connection: 'connecting', event: null }` y `getState`, `setState`, `subscribe`.
+  - [x] Crear `format.js` con `formatPrice(valor)` que devuelve pesos con punto de miles y sin decimales.
 - **Verificación**: [ ] `npm run build` · [ ] `node --input-type=module -e "import('./src/js/format.js').then(m => console.log(m.formatPrice(120000), m.formatPrice(75000), m.formatPrice(45000)))"` imprime `$120.000 $75.000 $45.000`
 - **Commit**: `feat(client-js): agrega store y formato de precios`
 
