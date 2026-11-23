@@ -80,6 +80,21 @@ public class BookingServiceImplTest {
         assertEquals("Ana", seenByOthers.lockedByClientId);
     }
 
+    // HU-07: Elegir una silla vendida muestra el mensaje del spec
+    @Test
+    public void hu07_sillaVendida_mensaje() throws Exception {
+        service.lockSeat("B-3", "Ana", null);
+        pay("Ana", "B-3");
+
+        try {
+            service.lockSeat("B-3", "Beto", null);
+            fail("Debía rechazar la silla vendida");
+        } catch (SeatNotAvailableException e) {
+            assertEquals("La silla B-3 ya no está disponible", e.reason);
+        }
+        assertEquals(SeatState.BOOKED, service.getSeat("B-3", null).state);
+    }
+
     // HU-01: Renovar la retención de una silla propia
     @Test
     public void hu01_renovar() throws Exception {
@@ -122,8 +137,7 @@ public class BookingServiceImplTest {
                 if (result instanceof LockResult) {
                     winners++;
                 } else if (result instanceof SeatNotAvailableException) {
-                    assertTrue(((SeatNotAvailableException) result).reason
-                            .startsWith("La silla A-1 ya no se encuentra disponible"));
+                    assertEquals("La silla A-1 ya no está disponible", ((SeatNotAvailableException) result).reason);
                     rejected++;
                 }
             }

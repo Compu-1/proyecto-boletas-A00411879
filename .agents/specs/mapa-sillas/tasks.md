@@ -6,8 +6,8 @@ Comandos de `codigo_base/` con `JAVA_HOME` e `ICE_HOME` exportados (`conventions
 
 ## Resumen
 
-- [ ] T1: Rama y documentos del spec
-- [ ] T2: Mensaje de rechazo en el servidor y sus pruebas
+- [x] T1: Rama y documentos del spec
+- [x] T2: Mensaje de rechazo en el servidor y sus pruebas
 - [ ] T3: Capa `api` y `store` (paralela con T2)
 - [ ] T4: Plano de sillas `SeatMap` con sus estilos (paralela con T5)
 - [ ] T5: Contadores del encabezado y `Toast` (paralela con T4)
@@ -18,16 +18,16 @@ Comandos de `codigo_base/` con `JAVA_HOME` e `ICE_HOME` exportados (`conventions
 - **Rama**: `git flow feature start mapa-sillas` (desde `develop`)
 - **Archivos**: `.agents/specs/mapa-sillas/` (spec, plan, tasks), `.agents/memory/decisions.md`, `.agents/memory/epics.md`, `.agents/designs/ui.md`
 - **Acciones**:
-  - [ ] Commit con spec y plan aprobados, tareas, decisiones D-022 a D-027, HU-06 y HU-07 en `epics.md` y la corrección de `ui.md` (clic en silla propia no hace nada; contador "Disponibles").
+  - [x] Commit con spec y plan aprobados, tareas, decisiones D-022 a D-027, HU-06 y HU-07 en `epics.md` y la corrección de `ui.md` (clic en silla propia no hace nada; contador "Disponibles").
 - **Verificación**: [ ] `git status --short` vacío
 - **Commit**: `docs(agents): aprueba spec y plan de mapa-sillas`
 
 ## T2: Mensaje de rechazo en el servidor y sus pruebas
 - **Archivos**: `codigo_base/server/src/main/java/co/icesi/booking/server/BookingServiceImpl.java` (modificar), `codigo_base/server/src/test/java/co/icesi/booking/server/BookingServiceImplTest.java` (modificar)
 - **Acciones**:
-  - [ ] En `lockSeat`, cambiar el texto de `SeatNotAvailableException` a `"La silla <id> ya no está disponible"` (D-026), sin tocar el `Thread.sleep(25)` ni el `synchronized`.
-  - [ ] Actualizar `hu01_mismaSillaMismoInstante_ganaUno` para que espere el texto nuevo.
-  - [ ] Agregar `hu07_sillaVendida_mensaje`: una silla vendida rechaza `lockSeat` con "La silla B-3 ya no está disponible" (HU-07: silla que ya tomó otro).
+  - [x] En `lockSeat`, cambiar el texto de `SeatNotAvailableException` a `"La silla <id> ya no está disponible"` (D-026), sin tocar el `Thread.sleep(25)` ni el `synchronized`.
+  - [x] Actualizar `hu01_mismaSillaMismoInstante_ganaUno` para que espere el texto nuevo.
+  - [x] Agregar `hu07_sillaVendida_mensaje`: una silla vendida rechaza `lockSeat` con "La silla B-3 ya no está disponible" (HU-07: silla que ya tomó otro).
 - **Verificación**: [ ] `./gradlew build` · [ ] `./gradlew :server:test --tests 'co.icesi.booking.server.BookingServiceImplTest'` · [ ] con el servidor encendido, `./gradlew :client:runClient --args="--test-concurrency"` muestra `Peticiones que creyeron ganar el bloqueo : 1`
 - **Commit**: `fix(server): unifica el mensaje de silla no disponible`
 

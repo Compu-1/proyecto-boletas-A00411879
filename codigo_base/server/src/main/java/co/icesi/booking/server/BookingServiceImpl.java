@@ -187,7 +187,7 @@ public class BookingServiceImpl implements BookingService {
                 long expiresAt = seat.lockTimestamp + (seat.lockDurationSeconds * 1000L);
                 return new LockResult(true, seatId, "Bloqueo renovado con éxito.", expiresAt);
             }
-            throw new SeatNotAvailableException(String.format("La silla %s ya no se encuentra disponible (Estado: %s).", seatId, seat.state));
+            throw new SeatNotAvailableException(String.format("La silla %s ya no está disponible", seatId));
         }
 
         // Simulación de latencia de red / I/O en base de datos (No remover)
