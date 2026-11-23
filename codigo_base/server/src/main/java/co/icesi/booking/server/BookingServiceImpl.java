@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.LongSupplier;
 
 import com.zeroc.Ice.Current;
 
@@ -27,11 +28,18 @@ public class BookingServiceImpl implements BookingService {
 
     public static final long DEFAULT_LOCK_DURATION_SECONDS = 90;
 
+    private final LongSupplier clock;
     private final EventInfo eventInfo;
     private final Map<String, Seat> seatsMap = new HashMap<>();
     private final List<BookingRecord> bookingsList = new ArrayList<>();
 
     public BookingServiceImpl() {
+        this(System::currentTimeMillis);
+    }
+
+    // Reloj inyectable (milisegundos epoch) para que las pruebas controlen el tiempo
+    BookingServiceImpl(LongSupplier clock) {
+        this.clock = clock;
         this.eventInfo = new EventInfo(
                 "EVT-2026-LIVE",
                 "Concierto Icesi Live Rock & Pop 2026",
@@ -83,8 +91,20 @@ public class BookingServiceImpl implements BookingService {
 
     private boolean isLockExpired(Seat seat) {
         if (seat.state != SeatState.LOCKED) return false;
-        long elapsedSeconds = (System.currentTimeMillis() - seat.lockTimestamp) / 1000L;
-        return elapsedSeconds > seat.lockDurationSeconds;
+        long elapsedMillis = clock.getAsLong() - seat.lockTimestamp;
+        return elapsedMillis >= seat.lockDurationSeconds * 1000L;
+    }
+
+    // Foto de la silla para las consultas: una retención vencida se ve disponible (D2) y
+    // se devuelve una copia, nunca la instancia interna, porque Ice serializa fuera del candado (D3)
+    private Seat viewOf(Seat seat) {
+        Seat view = seat.clone();
+        if (isLockExpired(seat)) {
+            view.state = SeatState.AVAILABLE;
+            view.lockedByClientId = "";
+            view.lockTimestamp = 0L;
+        }
+        return view;
     }
 
     private void updateEventCounters() {
@@ -107,24 +127,27 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public EventInfo getEventInfo(Current current) {
+    public synchronized EventInfo getEventInfo(Current current) {
         updateEventCounters();
-        return eventInfo;
+        return eventInfo.clone();
     }
 
     @Override
-    public Seat[] getAllSeats(Current current) {
-        List<Seat> list = new ArrayList<>(seatsMap.values());
+    public synchronized Seat[] getAllSeats(Current current) {
+        List<Seat> list = new ArrayList<>();
+        for (Seat s : seatsMap.values()) {
+            list.add(viewOf(s));
+        }
         list.sort(Comparator.comparing((Seat s) -> s.row).thenComparingInt(s -> s.number));
         return list.toArray(new Seat[0]);
     }
 
     @Override
-    public Seat[] getSeatsByZone(SeatZone zone, Current current) {
+    public synchronized Seat[] getSeatsByZone(SeatZone zone, Current current) {
         List<Seat> list = new ArrayList<>();
         for (Seat s : seatsMap.values()) {
             if (s.zone == zone) {
-                list.add(s);
+                list.add(viewOf(s));
             }
         }
         list.sort(Comparator.comparing((Seat s) -> s.row).thenComparingInt(s -> s.number));
@@ -132,16 +155,16 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Seat getSeat(String seatId, Current current) throws SeatNotFoundException {
+    public synchronized Seat getSeat(String seatId, Current current) throws SeatNotFoundException {
         Seat seat = seatsMap.get(seatId);
         if (seat == null) {
             throw new SeatNotFoundException("Silla no encontrada en inventario: " + seatId);
         }
-        return seat;
+        return viewOf(seat);
     }
 
     @Override
-    public LockResult lockSeat(String seatId, String clientId, Current current)
+    public synchronized LockResult lockSeat(String seatId, String clientId, Current current)
             throws SeatNotFoundException, SeatNotAvailableException {
 
         Seat seat = seatsMap.get(seatId);
@@ -160,7 +183,7 @@ public class BookingServiceImpl implements BookingService {
         if (seat.state != SeatState.AVAILABLE) {
             if (seat.state == SeatState.LOCKED && clientId.equals(seat.lockedByClientId)) {
                 // El mismo cliente renueva el bloqueo
-                seat.lockTimestamp = System.currentTimeMillis();
+                seat.lockTimestamp = clock.getAsLong();
                 long expiresAt = seat.lockTimestamp + (seat.lockDurationSeconds * 1000L);
                 return new LockResult(true, seatId, "Bloqueo renovado con éxito.", expiresAt);
             }
@@ -175,7 +198,7 @@ public class BookingServiceImpl implements BookingService {
 
         seat.state = SeatState.LOCKED;
         seat.lockedByClientId = clientId;
-        seat.lockTimestamp = System.currentTimeMillis();
+        seat.lockTimestamp = clock.getAsLong();
         seat.lockDurationSeconds = DEFAULT_LOCK_DURATION_SECONDS;
 
         long expiresAt = seat.lockTimestamp + (DEFAULT_LOCK_DURATION_SECONDS * 1000L);
@@ -186,7 +209,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public boolean releaseSeat(String seatId, String clientId, Current current) throws SeatNotFoundException {
+    public synchronized boolean releaseSeat(String seatId, String clientId, Current current) throws SeatNotFoundException {
         Seat seat = seatsMap.get(seatId);
         if (seat == null) {
             throw new SeatNotFoundException("Silla no encontrada: " + seatId);
@@ -206,7 +229,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingResult confirmBooking(String[] seatIds, String clientId, String customerName, String customerEmail, Current current)
+    public synchronized BookingResult confirmBooking(String[] seatIds, String clientId, String customerName, String customerEmail, Current current)
             throws InvalidBookingException, BookingException {
 
         if (seatIds == null || seatIds.length == 0) {
@@ -232,25 +255,31 @@ public class BookingServiceImpl implements BookingService {
                 throw new BookingException("La silla " + seatId + " ya fue vendida definitivamente.");
             }
             if (seat.state == SeatState.LOCKED) {
-                if (isLockExpired(seat)) {
-                    throw new LockExpiredException("El bloqueo temporal de la silla " + seatId + " ha expirado.");
-                }
-                if (!clientId.equals(seat.lockedByClientId)) {
+                boolean expired = isLockExpired(seat);
+                boolean ownedByBuyer = clientId.equals(seat.lockedByClientId);
+                if (!expired && !ownedByBuyer) {
                     throw new BookingException("La silla " + seatId + " se encuentra bloqueada por otro comprador.");
                 }
+                if (expired && ownedByBuyer) {
+                    throw new LockExpiredException("El bloqueo temporal de la silla " + seatId + " ha expirado.");
+                }
+            }
+            // Solo se paga lo retenido por el mismo comprador y vigente (RN-03)
+            if (seat.state != SeatState.LOCKED || isLockExpired(seat)) {
+                throw new InvalidBookingException("La silla " + seatId + " no está retenida a tu nombre.");
             }
             totalAmount += seat.price;
             validatedSeats.add(seat);
         }
 
-        // Paso 2: Confirmación y cambio a BOOKED (Proceso no atómico)
+        // Paso 2: Confirmación y cambio a BOOKED (atómico: todas las sillas pasaron el paso 1 dentro del mismo candado)
         for (Seat s : validatedSeats) {
             s.state = SeatState.BOOKED;
             s.lockedByClientId = clientId;
         }
 
         String bookingCode = "RES-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
-        long now = System.currentTimeMillis();
+        long now = clock.getAsLong();
 
         BookingRecord record = new BookingRecord(
                 bookingCode,
@@ -278,12 +307,13 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Seat[] getMyLockedSeats(String clientId, Current current) {
+    public synchronized Seat[] getMyLockedSeats(String clientId, Current current) {
         List<Seat> list = new ArrayList<>();
         if (clientId != null && !clientId.isEmpty()) {
             for (Seat s : seatsMap.values()) {
-                if (s.state == SeatState.LOCKED && clientId.equals(s.lockedByClientId) && !isLockExpired(s)) {
-                    list.add(s);
+                Seat view = viewOf(s);
+                if (view.state == SeatState.LOCKED && clientId.equals(view.lockedByClientId)) {
+                    list.add(view);
                 }
             }
         }
@@ -291,12 +321,12 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingRecord[] getMyBookings(String clientId, Current current) {
+    public synchronized BookingRecord[] getMyBookings(String clientId, Current current) {
         List<BookingRecord> list = new ArrayList<>();
         if (clientId != null && !clientId.isEmpty()) {
             for (BookingRecord b : bookingsList) {
                 if (clientId.equals(b.clientId)) {
-                    list.add(b);
+                    list.add(b.clone());
                 }
             }
         }
@@ -304,7 +334,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public void resetSeats(Current current) {
+    public synchronized void resetSeats(Current current) {
         initSeats();
         System.out.println("[RESET] Inventario y reservas reiniciadas a estado de fábrica.");
     }

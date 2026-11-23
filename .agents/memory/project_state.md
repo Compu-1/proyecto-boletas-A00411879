@@ -4,26 +4,26 @@ Actualizado: 2026-11-22. Lo actualiza la tarea de cierre de cada `tasks.md`.
 
 ## Hoy
 
-- **Backend** (`codigo_base/`): compila y corre (TCP 10000 + WS 10002). Estado en memoria: `HashMap seatsMap` y `ArrayList bookingsList` en `BookingServiceImpl`; reiniciar el servidor o `resetSeats()` lo borra todo.
+- **Backend** (`codigo_base/`): compila y corre (TCP 10000 + WS 10002), con operaciones `synchronized`, estado efectivo de las retenciones y pago todo o nada. Estado en memoria: `HashMap seatsMap` y `ArrayList bookingsList` en `BookingServiceImpl`; reiniciar el servidor o `resetSeats()` lo borra todo.
 - **Frontend** (`client-js/`): no existe.
-- **git flow** inicializado (`master`, `develop`). `.agents/` creado en `feature/agents-setup`.
+- **git flow** inicializado (`master`, `develop`). `.agents/` ya está en `develop`.
+- **Documentación**: un solo `README.md` en la raíz y un solo `docs/` (enunciado y wireframe); ver D-015.
+- **Spec en curso**: `concurrencia-backend` implementada en `feature/concurrencia-backend` (12 pruebas JUnit en verde y `--test-concurrency` = 1); falta `git flow feature finish`.
 
 ## Defectos conocidos del backend
 
+Los 5 de `concurrencia-backend` quedaron corregidos. Abierto:
+
 | # | Defecto | RF/RNF | Evidencia |
 | :--- | :--- | :--- | :--- |
-| 1 | `lockSeat` sin exclusión mutua (check-then-act + `Thread.sleep(25)`): 10 de 10 hilos ganan la misma silla | RNF-1 | `--test-concurrency` reporta 10 (2026-11-22) |
-| 2 | `confirmBooking` valida y marca `BOOKED` en dos pasos no atómicos | RNF-1 | `BookingServiceImpl.confirmBooking` |
-| 3 | `confirmBooking` acepta sillas `AVAILABLE` que el comprador nunca retuvo | RF-5 | solo rechaza `BOOKED` y retenidas por otro |
-| 4 | Expiración perezosa: `getAllSeats`, `getSeatsByZone` y `getSeat` devuelven `LOCKED` aunque el bloqueo ya venció | RF-1, RF-3 | `isLockExpired()` solo se usa en lock/release/confirm/getMyLockedSeats/contadores |
-| 5 | Los getters devuelven las instancias internas de `Seat` (mutables), no copias | RNF-1 | `getAllSeats`, `getSeat` |
-| 6 | `codigo_base/README.md` documenta `./gradlew runClient --args=...`, que falla | — | usar `:client:runClient` |
+| 1 | `confirmBooking` no rechaza ids repetidos en el pedido: `["A-1","A-1"]` cobra la silla dos veces. Es validación de entrada, no concurrencia; se resuelve en `checkout-reservas` y al cerrarlo se borra esta fila y la mención en "Siguiente" | RF-5, RN-05 | se reproduce con un solo hilo: `confirmBooking(new String[]{"A-1","A-1"}, ...)` |
+
+Riesgo aceptado (D-010): las llamadas se atienden de a una y cada retención exitosa ocupa el candado 25 ms; si el frontend lo nota, pasar a un candado por silla (revisar en `mapa-sillas`).
 
 ## Siguiente (orden sugerido de specs, una `feature/<slug>` cada uno)
 
-1. `concurrencia-backend`: defectos 1 a 5 (RNF-1, RF-3 en servidor, RF-5).
-2. `tooling-webpack`: proyecto `client-js/` con Webpack y conexión Ice (Fase 1 del enunciado, RNF-3, RNF-4).
-3. `mapa-sillas`: aforo y retención (RF-1, RF-2, RF-7).
-4. `carrito-temporizador`: cuenta regresiva y liberación (RF-3, RF-4).
-5. `checkout-reservas`: pago, comprobante y mis compras (RF-5, RF-6).
-6. Opcional: `despliegue-vm` (+10 %).
+1. `tooling-webpack`: proyecto `client-js/` con Webpack y conexión Ice (Fase 1 del enunciado, RNF-3, RNF-4).
+2. `mapa-sillas`: aforo y retención (RF-1, RF-2, RF-7).
+3. `carrito-temporizador`: cuenta regresiva y liberación (RF-3, RF-4).
+4. `checkout-reservas`: pago, comprobante y mis compras (RF-5, RF-6). Incluir el defecto 1 (ids repetidos en `confirmBooking`).
+5. Opcional: `despliegue-vm` (+10 %).
