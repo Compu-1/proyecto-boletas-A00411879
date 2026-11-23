@@ -3,7 +3,7 @@
 Sistema distribuido de reserva de boletas para un concierto de 90 sillas. Proyecto final de **Computación en Internet I** (09810 - TIC, NRC 12378), Universidad Icesi, 2026-2.
 
 - **Backend** (`codigo_base/`): Java 17 + ZeroC Ice 3.7, escuchando en **TCP 10000** (clientes Java y pruebas) y **WebSocket 10002** (navegador).
-- **Frontend** (`client-js/`, por crear): SPA en JavaScript vainilla con Webpack, conectada por WebSocket.
+- **Frontend** (`client-js/`): SPA en JavaScript vainilla con Webpack, conectada por WebSocket.
 
 Ciclo de una silla: `AVAILABLE` -> `LOCKED` (retención exclusiva de 90 s) -> `BOOKED` (vendida, con código `RES-XXXXXXXX`).
 Zonas: VIP (filas A-B, $120.000), Platea (C-E, $75.000) y General (F-I, $45.000), 10 sillas por fila.
@@ -12,7 +12,7 @@ Zonas: VIP (filas A-B, $120.000), Platea (C-E, $75.000) y General (F-I, $45.000)
 
 ```text
 codigo_base/   backend Gradle: common/ (contrato Slice), server/ (servicio), client/ (cliente Java de consola)
-client-js/     frontend (por crear)
+client-js/     frontend: SPA en JavaScript vainilla con Webpack
 docs/          enunciado (PDF y fuente LaTeX) y wireframe
 .agents/       flujo de trabajo: convenciones, diseño, decisiones, specs y skills
 AGENTS.md      guía para agentes de código (CLAUDE.md la importa)
@@ -50,7 +50,17 @@ Lanza 10 hilos que intentan retener la silla `A-1` al mismo tiempo. Resultado co
 
 ## Frontend
 
-Pendiente. Requisitos (ver `docs/`): JavaScript sin frameworks, Webpack, `npm start` en el puerto 3000 y `npm run build` hacia `dist/`.
+Requisitos: Node 22 o superior (probado con 25) y el servidor encendido (`./gradlew runServer`).
+
+```bash
+cd client-js
+npm install        # una sola vez
+npm start          # desarrollo en http://localhost:3000
+npm run build      # versión de entrega en dist/
+python3 -m http.server 8080 -d dist   # opcional: abrir dist/ en http://localhost:8080
+```
+
+`npm start` y `npm run build` generan solos los stubs de Ice (`src/js/generated/`) desde el mismo `BookingService.ice` del backend; esa carpeta no se versiona ni se edita. El navegador habla con el servidor solo por WebSocket (puerto 10002 del mismo host de la página). Sin conexión muestra el aviso y hay que recargar la página.
 
 ## Cómo se trabaja
 

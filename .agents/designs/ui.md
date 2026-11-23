@@ -74,7 +74,7 @@ CONCIERTO ICESI LIVE ROCK & POP 2026               LIBRES  RETENIDAS  VENDIDAS
 | `CheckoutModal` | panel blanco: resumen, nombre, correo, errores en rojo, Confirmar |
 | `Receipt` | panel blanco: código grande, sillas, total, "Guarda este código"; también lista "Mis compras" |
 | `Toast` | aviso abajo a la izquierda: fondo negro, texto blanco, barra izquierda roja (error) o blanca (info); se oculta a los 4 s |
-| `ConnectionBanner` | franja roja "SIN CONEXIÓN CON LA TAQUILLA · REINTENTANDO"; el mapa baja a 40 % de opacidad y no acepta clics |
+| `ConnectionBanner` | estado de la conexión: "Conectado" en gris mientras hay conexión; si se pierde, franja roja "Sin conexión con la taquilla. Recarga la página para intentar de nuevo." (no reintenta solo); el mapa baja a 40 % de opacidad y no acepta clics |
 
 ## Movimiento
 

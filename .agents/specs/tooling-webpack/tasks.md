@@ -12,7 +12,7 @@ Comandos de `client-js/` desde esa carpeta; para verificar contra el sistema rea
 - [x] T4: Estado y formato de precios (paralela con T3)
 - [x] T5: Componentes del encabezado y de la conexión
 - [x] T6: Conexión de todo y aviso sin conexión
-- [ ] T7: Cierre
+- [x] T7: Cierre
 
 ## T1: Documentos del spec en la rama
 - **Rama**: ya creada con `git flow feature start tooling-webpack`
@@ -68,8 +68,8 @@ Comandos de `client-js/` desde esa carpeta; para verificar contra el sistema rea
 - **Commit**: `feat(client-js): muestra el evento y avisa la falta de conexión`
 
 ## T7: Cierre
-- [ ] `npm run build` y `./gradlew build` en verde
-- [ ] `README.md`: comandos de `client-js/`; `designs/ui.md`: texto de `ConnectionBanner` sin "REINTENTANDO"; `AGENTS.md`: `client-js/` deja de decir "por crear"
-- [ ] `project_state.md`: frontend existe y quitar `tooling-webpack` de "Siguiente"; `epics.md`: marcar HU-04 y HU-05; `decisions.md` si surgió algo nuevo
+- [x] `npm run build` y `./gradlew build` en verde
+- [x] `README.md`: comandos de `client-js/`; `designs/ui.md`: texto de `ConnectionBanner` sin "REINTENTANDO"; `AGENTS.md`: `client-js/` deja de decir "por crear"
+- [x] `project_state.md`: frontend existe y quitar `tooling-webpack` de "Siguiente"; `epics.md`: marcar HU-04 y HU-05; `decisions.md` si surgió algo nuevo
 - **Commit**: `docs(agents): cierra tooling-webpack`
 - [ ] `git flow feature finish tooling-webpack` (solo si el usuario lo pide)
