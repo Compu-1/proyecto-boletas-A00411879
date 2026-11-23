@@ -9,3 +9,4 @@ docs/*.synctex.gz
 # Frontend: dependencias y salida de compilación
 client-js/node_modules/
 client-js/dist/
+client-js/src/js/generated/

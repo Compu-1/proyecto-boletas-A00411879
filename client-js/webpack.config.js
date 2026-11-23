@@ -13,6 +13,10 @@ module.exports = {
       { test: /\.css$/i, use: ['style-loader', 'css-loader'] },
     ],
   },
+  resolve: {
+    // `ice` carga fs y net solo en Node (protegido por typeof process); en el navegador no se usan
+    fallback: { fs: false, net: false },
+  },
   plugins: [
     new HtmlWebpackPlugin({ template: './src/index.html' }),
   ],

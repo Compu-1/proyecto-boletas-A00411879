@@ -8,7 +8,7 @@ Comandos de `client-js/` desde esa carpeta; para verificar contra el sistema rea
 
 - [x] T1: Documentos del spec en la rama
 - [x] T2: Proyecto npm con Webpack y página vacía
-- [ ] T3: Clases Slice y conexión por WebSocket
+- [x] T3: Clases Slice y conexión por WebSocket
 - [ ] T4: Estado y formato de precios (paralela con T3)
 - [ ] T5: Componentes del encabezado y de la conexión
 - [ ] T6: Conexión de todo y aviso sin conexión
@@ -35,9 +35,9 @@ Comandos de `client-js/` desde esa carpeta; para verificar contra el sistema rea
 ## T3: Clases Slice y conexión por WebSocket
 - **Archivos**: `client-js/package.json`, `client-js/src/js/api.js` (crear/modificar); `client-js/webpack.config.js` (modificar si hace falta); `.gitignore` (modificar)
 - **Acciones**:
-  - [ ] Agregar `ice` y `slice2js` y el script `slice` (genera `src/js/generated/` desde el `.ice`), enganchado en `prestart` y `prebuild`; ignorar `client-js/src/js/generated/`.
-  - [ ] Crear `api.js` con `connect({ onDisconnect })` (Communicator, proxy `ws -h <hostname> -p 10002`, límite de 10 s por llamada y aviso de cierre) y `getEventInfo()` que devuelve `{ name, date, venue, prices }`; los errores Slice se traducen a `Error` con el `reason`.
-  - [ ] Llamar a ambas desde `app.js` solo para registrar el resultado en consola (prueba mínima del riesgo del plan); si el bundle falla por módulos de Node, ajustar `resolve.fallback` y registrarlo en `decisions.md`.
+  - [x] Agregar `ice` y `slice2js` y el script `slice` (genera `src/js/generated/` desde el `.ice`), enganchado en `prestart` y `prebuild`; ignorar `client-js/src/js/generated/`.
+  - [x] Crear `api.js` con `connect({ onDisconnect })` (Communicator, proxy `ws -h <hostname> -p 10002`, límite de 10 s por llamada y aviso de cierre) y `getEventInfo()` que devuelve `{ name, date, venue, prices }`; los errores Slice se traducen a `Error` con el `reason`.
+  - [x] Llamar a ambas desde `app.js` solo para registrar el resultado en consola (prueba mínima del riesgo del plan); si el bundle falla por módulos de Node, ajustar `resolve.fallback` y registrarlo en `decisions.md`.
 - **Verificación**: [ ] `npm run build` · [ ] manual: con el servidor encendido, `npm start` y la consola muestra el evento "Concierto Icesi Live Rock & Pop 2026"
 - **Commit**: `feat(client-js): conecta con el servidor por WebSocket`
 
