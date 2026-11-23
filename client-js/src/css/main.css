@@ -127,6 +127,7 @@ body {
 }
 
 .seat-map {
+  width: 100%;
   max-width: 720px;
   margin: 0 auto;
   transition: opacity 150ms;
