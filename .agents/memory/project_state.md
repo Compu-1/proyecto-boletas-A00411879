@@ -5,11 +5,11 @@ Actualizado: 2026-11-23. Lo actualiza la tarea de cierre de cada `tasks.md`.
 ## Hoy
 
 - **Backend** (`codigo_base/`): compila y corre (TCP 10000 + WS 10002), con operaciones `synchronized`, estado efectivo de las retenciones y pago todo o nada. Estado en memoria: `HashMap seatsMap` y `ArrayList bookingsList` en `BookingServiceImpl`; reiniciar el servidor o `resetSeats()` lo borra todo.
-- **Frontend** (`client-js/`): proyecto npm + Webpack 5 (`npm start` en el puerto 3000, `npm run build` hacia `dist/`) con conexión Ice por WebSocket al 10002. Muestra el evento, los precios, los contadores del aforo y el plano de 90 sillas con 4 estados, que se actualiza cada 1 s (D-022); un clic en una silla disponible la retiene y los rechazos salen en un aviso. Sin conexión avisa, atenúa el plano y no reintenta. Capas `api.js` / `store.js` / `components/` / `app.js` (D-016 a D-029). Aún no hay carrito, temporizador ni pago.
+- **Frontend** (`client-js/`): proyecto npm + Webpack 5 (`npm start` en el puerto 3000, `npm run build` hacia `dist/`) con conexión Ice por WebSocket al 10002. Muestra el evento, los precios, los contadores del aforo y el plano de 90 sillas con 4 estados, que se actualiza cada 1 s (D-022); un clic en una silla disponible la retiene y los rechazos salen en un aviso. Sin conexión avisa, atenúa el plano y no reintenta. Además tiene el carrito (talón "Tu boleta") con la cuenta regresiva `mm:ss` de cada silla retenida y el total, y la × para quitar una silla; las vencidas salen solas y al recargar se recuperan las vigentes. Capas `api.js` / `store.js` / `seats.js` / `components/` / `app.js` (D-016 a D-036). Aún no hay pago.
 - **git flow** inicializado (`master`, `develop`). `.agents/` ya está en `develop`.
 - **Documentación**: un solo `README.md` en la raíz y un solo `docs/` (enunciado y wireframe); ver D-015.
-- **Specs cerradas**, ya en `develop`: `concurrencia-backend` (PR #1; 12 pruebas JUnit y `--test-concurrency` = 1), `tooling-webpack` (PR #2) y `mapa-sillas` (PR #3; 13 pruebas JUnit, verificada a mano con dos ventanas de Chrome: cambio ajeno visible en 0,9 s, vencimiento a los 90,8 s, rechazo con aviso, sin conexión a los 0,4 s y recarga con el sistema de vuelta).
-- **Spec en curso**: ninguna; sigue `carrito-temporizador` (ver "Siguiente").
+- **Specs cerradas**, ya en `develop`: `concurrencia-backend` (PR #1; 12 pruebas JUnit y `--test-concurrency` = 1), `tooling-webpack` (PR #2) y `mapa-sillas` (PR #3; 13 pruebas JUnit, verificada a mano con dos ventanas de Chrome: cambio ajeno visible en 0,9 s, vencimiento a los 90,8 s, rechazo con aviso, sin conexión a los 0,4 s y recarga con el sistema de vuelta). Lista en `feature/carrito-temporizador`, pendiente de `git flow feature finish`: 15 pruebas JUnit y verificada a mano con dos pestañas (01:29 al retener, `00:49` y `01:29` con total $165.000, quitar libera al instante, recarga recupera `01:10`, vencimiento a `00:01` sin aviso, y sin conexión la cuenta sigue y la × saca la silla).
+- **Spec en curso**: `carrito-temporizador` (implementada, falta cerrar la rama); sigue `checkout-reservas` (ver "Siguiente").
 
 ## Defectos conocidos del backend
 
@@ -25,6 +25,5 @@ Aviso conocido del frontend: `npm run build` muestra 2 avisos de tamaño del bun
 
 ## Siguiente (orden sugerido de specs, una `feature/<slug>` cada uno)
 
-1. `carrito-temporizador`: cuenta regresiva y liberación (RF-3, RF-4). Decidir qué ve el Comprador de sus sillas al recargar la página: el `clientId` ya persiste por pestaña (D-025), así que las recupera mientras no venzan.
-2. `checkout-reservas`: pago, comprobante y mis compras (RF-5, RF-6). Incluir el defecto 1 (ids repetidos en `confirmBooking`).
-3. Opcional: `despliegue-vm` (+10 %).
+1. `checkout-reservas`: pago, comprobante y mis compras (RF-5, RF-6). Incluir el defecto 1 (ids repetidos en `confirmBooking`).
+2. Opcional: `despliegue-vm` (+10 %). Al desplegar, comparar la hora (`date`) de la VM con la del navegador: la cuenta regresiva usa el reloj del navegador (D-031).

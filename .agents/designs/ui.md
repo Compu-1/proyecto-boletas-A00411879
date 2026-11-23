@@ -6,11 +6,10 @@ Referencia visual: [`mockup.html`](mockup.html) (abrir en el navegador). Es est�
 
 La página es el auditorio con las luces apagadas. Las sillas son puntos de luz blancos sobre negro y **lo único rojo en pantalla es lo del comprador**: sus sillas, su tiempo y su botón de pago. Si algo es rojo, es tuyo o es urgente.
 
-Tres gestos poco comunes, todos simples de construir:
+Dos gestos poco comunes, todos simples de construir:
 
-1. **Mecha**: una línea roja de 4 px pegada al borde superior de la ventana que se consume con el tiempo de la retención más próxima a vencer. Parpadea los últimos 10 s. No existe si el carrito está vacío.
-2. **Talón de boleta**: el carrito es un boleto con línea de corte perforada y números monoespaciados.
-3. **Boleto impreso**: el pago y el comprobante se abren invertidos (panel blanco, texto negro), como un boleto recién impreso; el código `RES-XXXXXXXX` va enorme.
+1. **Talón de boleta**: el carrito es un boleto con línea de corte perforada y números monoespaciados.
+2. **Boleto impreso**: el pago y el comprobante se abren invertidos (panel blanco, texto negro), como un boleto recién impreso; el código `RES-XXXXXXXX` va enorme.
 
 ## Tokens
 
@@ -44,7 +43,6 @@ Reglas: grises solo derivados de negro y blanco; esquinas rectas en todo (radio 
 ## Composición
 
 ```text
-████████████████████████████░░░░░░░░░░░░░░░  <- mecha roja (tiempo de la más próxima a vencer)
 ICESI LIVE ARENA                                      73        6        11
 CONCIERTO ICESI LIVE ROCK & POP 2026               DISPONIBLES RETENIDAS VENDIDAS
 2026-11-28 20:00 · Auditorio Manuelita
@@ -68,7 +66,6 @@ CONCIERTO ICESI LIVE ROCK & POP 2026               DISPONIBLES RETENIDAS VENDIDA
 | Componente | Contenido |
 | :--- | :--- |
 | `EventHeader` | marca, nombre del evento, fecha y lugar, tres contadores grandes en mono |
-| `FuseBar` (mecha) | barra roja superior; ancho = segundos restantes / 90 |
 | `SeatMap` | escenario, zonas, filas y sillas con los 4 estados, leyenda |
 | `Cart` (talón) | líneas `silla · zona · precio · mm:ss · ×`, corte perforado, total, botón Pagar |
 | `CheckoutModal` | panel blanco: resumen, nombre, correo, errores en rojo, Confirmar |
@@ -78,7 +75,7 @@ CONCIERTO ICESI LIVE ROCK & POP 2026               DISPONIBLES RETENIDAS VENDIDA
 
 ## Movimiento
 
-Transiciones de 150 ms, sin rebotes. Con `prefers-reduced-motion`, la mecha no parpadea.
+Transiciones de 150 ms, sin rebotes.
 
 ## Enfoques considerados
 

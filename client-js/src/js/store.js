@@ -24,8 +24,10 @@ const state = {
   connection: 'connecting', // 'connecting' | 'online' | 'offline'
   event: null,
   clientId: loadClientId(),
-  seats: [], // [{ id, zone, row, number, price, state, lockedBy }], vacío hasta la primera consulta
+  seats: [], // [{ id, zone, row, number, price, state, lockedBy, expiresAt }], vacío hasta la primera consulta
   pendingSeats: new Set(), // ids con una retención en curso
+  now: Date.now(), // ms epoch; lo actualiza el reloj de app.js para las cuentas regresivas (D-032)
+  releasedSeats: new Set(), // ids que el comprador quitó y la consulta aún no confirma (D-034)
 };
 const listeners = new Set();
 

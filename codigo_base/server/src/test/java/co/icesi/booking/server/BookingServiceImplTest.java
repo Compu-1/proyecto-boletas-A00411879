@@ -118,6 +118,32 @@ public class BookingServiceImplTest {
         assertEquals("Beto", service.getSeat("A-1", null).lockedByClientId);
     }
 
+    // HU-10: Quitar una silla propia la libera de inmediato y otro comprador puede retenerla
+    @Test
+    public void hu10_quitarPropia_otroLaRetiene() throws Exception {
+        service.lockSeat("A-1", "Ana", null);
+
+        assertTrue(service.releaseSeat("A-1", "Ana", null));
+
+        assertEquals(SeatState.AVAILABLE, service.getSeat("A-1", null).state);
+        assertTrue(service.lockSeat("A-1", "Beto", null).success);
+        assertEquals("Beto", service.getSeat("A-1", null).lockedByClientId);
+    }
+
+    // HU-10: Quitar una silla que ya venció y tomó otro comprador no se la quita al nuevo dueño
+    @Test
+    public void hu10_quitarVencidaYaTomada_noLibera() throws Exception {
+        service.lockSeat("A-1", "Ana", null);
+        now.addAndGet(LOCK_MILLIS);
+        service.lockSeat("A-1", "Beto", null);
+
+        assertEquals(false, service.releaseSeat("A-1", "Ana", null));
+
+        Seat seat = service.getSeat("A-1", null);
+        assertEquals(SeatState.LOCKED, seat.state);
+        assertEquals("Beto", seat.lockedByClientId);
+    }
+
     // HU-01: Varios compradores eligen la misma silla en el mismo instante (2, 10 y 50)
     @Test
     public void hu01_mismaSillaMismoInstante_ganaUno() throws Exception {

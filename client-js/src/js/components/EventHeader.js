@@ -1,4 +1,5 @@
 import { formatPrice } from '../format.js';
+import { visibleState } from '../seats.js';
 
 const ZONES = [
   { key: 'vip', label: 'VIP' },
@@ -17,19 +18,28 @@ function element(tag, className, text) {
 
 // Contadores del aforo, contados de la misma lista de sillas que pinta el plano (D-024):
 // así Disponibles + Retenidas + Vendidas siempre suman las sillas que se ven
-function countSeats(seats) {
+function countSeats(seats, view) {
+  const states = seats.map((seat) => visibleState(seat, view));
   return {
-    available: seats.filter(({ state }) => state === 'available').length,
-    locked: seats.filter(({ state }) => state === 'locked').length,
-    booked: seats.filter(({ state }) => state === 'booked').length,
+    available: states.filter((state) => state === 'available').length,
+    locked: states.filter((state) => state === 'mine' || state === 'other').length,
+    booked: states.filter((state) => state === 'booked').length,
   };
 }
 
 // Encabezado del evento: marca, nombre, fecha, lugar, precio por zona y contadores del aforo.
 // Sin evento no pinta datos; sin sillas todavía no pinta contadores.
 export function EventHeader(contenedor) {
+  let lastKey = null;
   return {
-    render({ event, seats }) {
+    render({ event, seats, clientId, now, releasedSeats }) {
+      // El reloj repinta cuatro veces por segundo (D-032): solo se reconstruye si cambió algo
+      const counts = seats.length > 0 ? countSeats(seats, { clientId, now, releasedSeats }) : null;
+      const key = JSON.stringify([event, counts]);
+      if (key === lastKey) {
+        return;
+      }
+      lastKey = key;
       contenedor.replaceChildren();
       if (!event) {
         return;
@@ -55,8 +65,8 @@ export function EventHeader(contenedor) {
       );
       contenedor.append(info);
 
-      if (seats.length > 0) {
-        const { available, locked, booked } = countSeats(seats);
+      if (counts) {
+        const { available, locked, booked } = counts;
         const counters = element('ul', 'event-header__counters');
         [
           ['Disponibles', available],
