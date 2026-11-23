@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Icesi Live Arena · Mockup</title>
+<style>
+  :root {
+    --negro: #0A0A0A; --negro-2: #161616; --linea: #3A3A3A; --gris: #9A9A9A;
+    --blanco: #FAFAFA; --rojo: #E10600; --gris-oscuro: #555555;
+    --fuente-texto: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --fuente-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --e1: 4px; --e2: 8px; --e3: 16px; --e4: 24px; --e5: 40px;
+    --silla: 28px;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body { background: var(--negro); color: var(--blanco); font-family: var(--fuente-texto); }
+  .mono { font-family: var(--fuente-mono); }
+  .etiqueta { font-family: var(--fuente-mono); font-size: 11px; letter-spacing: .2em; color: var(--gris); text-transform: uppercase; }
+
+  /* Mecha */
+  .mecha { position: fixed; top: 0; left: 0; height: 4px; width: 62%; background: var(--rojo); transition: width 150ms linear; }
+
+  .app { max-width: 1200px; margin: 0 auto; padding: var(--e5) var(--e3); display: grid; grid-template-columns: 1fr 320px; gap: var(--e5); }
+
+  /* EventHeader */
+  .encabezado { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: flex-end; gap: var(--e4); padding-bottom: var(--e4); border-bottom: 1px solid var(--linea); }
+  .encabezado h1 { font-size: clamp(30px, 5vw, 56px); font-weight: 900; line-height: .95; letter-spacing: -.02em; text-transform: uppercase; margin: var(--e2) 0; }
+  .encabezado p { color: var(--gris); font-size: 14px; }
+  .contadores { display: flex; gap: var(--e4); text-align: right; }
+  .contadores b { display: block; font-family: var(--fuente-mono); font-size: 32px; }
+
+  /* SeatMap */
+  .escenario { width: 70%; margin: 0 auto var(--e5); padding-top: var(--e2); border-top: 2px solid var(--blanco); text-align: center; letter-spacing: .5em; box-shadow: 0 -14px 40px -10px rgba(250, 250, 250, .3); }
+  .zona { margin-bottom: var(--e4); }
+  .zona .etiqueta { margin: 0 0 var(--e2) 28px; }
+  .fila { display: flex; align-items: center; gap: var(--e2); margin-bottom: var(--e2); }
+  .fila__letra { width: 20px; font-family: var(--fuente-mono); font-size: 12px; color: var(--gris); }
+  .silla { width: var(--silla); height: var(--silla); padding: 0; border-radius: 50%; border: 2px solid var(--blanco); background: transparent; cursor: pointer; transition: background 150ms; }
+  .silla:nth-of-type(6) { margin-left: var(--e4); } /* pasillo */
+  .silla:hover { background: var(--blanco); }
+  .silla--mia, .silla--mia:hover { background: var(--rojo); border-color: var(--rojo); }
+  .silla--otro, .silla--otro:hover { background: transparent; border-style: dashed; border-color: var(--gris); cursor: not-allowed; }
+  .silla--vendida, .silla--vendida:hover { background: var(--linea); border-color: var(--linea); cursor: not-allowed; }
+  .leyenda { display: flex; flex-wrap: wrap; gap: var(--e4); margin-top: var(--e4); font-size: 12px; color: var(--gris); }
+  .leyenda .silla { width: 14px; height: 14px; margin: 0 6px 0 0 !important; vertical-align: -3px; cursor: default; display: inline-block; }
+
+  /* Cart (talón) */
+  .talon { align-self: start; position: sticky; top: var(--e4); background: var(--negro-2); padding: var(--e4); }
+  .talon ul { list-style: none; padding: 0; margin: var(--e3) 0; }
+  .talon li { display: grid; grid-template-columns: 40px 1fr auto 48px 20px; gap: var(--e2); align-items: center; padding: var(--e2) 0; font-family: var(--fuente-mono); font-size: 13px; }
+  .talon li span:nth-child(2) { color: var(--gris); }
+  .quitar { background: none; border: 0; color: var(--gris); font-size: 16px; cursor: pointer; }
+  .quitar:hover { color: var(--blanco); }
+  .corte { position: relative; margin: var(--e3) calc(-1 * var(--e4)); border-top: 2px dashed var(--linea); }
+  .corte::before, .corte::after { content: ""; position: absolute; top: -9px; width: 16px; height: 16px; border-radius: 50%; background: var(--negro); }
+  .corte::before { left: -8px; } .corte::after { right: -8px; }
+  .total { display: flex; justify-content: space-between; align-items: baseline; margin: var(--e3) 0; }
+  .total b { font-family: var(--fuente-mono); font-size: 28px; }
+  .boton { width: 100%; padding: var(--e3); border: 0; background: var(--rojo); color: var(--blanco); font: 700 14px var(--fuente-texto); letter-spacing: .25em; text-transform: uppercase; cursor: pointer; }
+
+  /* Paneles invertidos: CheckoutModal y Receipt */
+  .muestras { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--e4); align-items: start; padding-top: var(--e5); border-top: 1px solid var(--linea); }
+  .panel { background: var(--blanco); color: var(--negro); padding: var(--e4); }
+  .panel .etiqueta { color: var(--gris-oscuro); }
+  .panel h2 { font-size: 22px; margin: var(--e2) 0 var(--e4); }
+  .panel label { display: block; font-size: 12px; margin-bottom: var(--e3); }
+  .panel input { display: block; width: 100%; margin-top: var(--e1); padding: var(--e2) 0; border: 0; border-bottom: 2px solid var(--negro); background: transparent; font: 16px var(--fuente-texto); }
+  .panel input.invalido { border-bottom-color: var(--rojo); }
+  .error { color: var(--rojo); font-size: 12px; margin: calc(-1 * var(--e2)) 0 var(--e3); }
+  .codigo { font-family: var(--fuente-mono); font-size: clamp(28px, 4vw, 40px); font-weight: 700; margin: var(--e3) 0; letter-spacing: .04em; }
+
+  /* Toast */
+  .aviso { background: var(--negro-2); border-left: 4px solid var(--rojo); padding: var(--e3); font-size: 14px; }
+  .aviso--info { border-left-color: var(--blanco); margin-top: var(--e3); }
+
+  @media (max-width: 900px) {
+    .app { grid-template-columns: 1fr; }
+    .encabezado { flex-direction: column; align-items: flex-start; }
+    .contadores { text-align: left; }
+    .talon { position: static; }
+  }
+  @media (max-width: 480px) {
+    :root { --silla: 22px; }
+    .fila { gap: 6px; }
+    .silla:nth-of-type(6) { margin-left: var(--e3); }
+  }
+</style>
+</head>
+<body>
+  <div class="mecha" role="progressbar" aria-label="Tiempo de retención" aria-valuemin="0" aria-valuemax="90" aria-valuenow="54"></div>
+
+  <main class="app">
+    <header class="encabezado">
+      <div>
+        <p class="etiqueta">Icesi Live Arena</p>
+        <h1>Concierto Icesi Live<br>Rock &amp; Pop 2026</h1>
+        <p>2026-11-28 20:00 · Auditorio Manuelita - Universidad Icesi</p>
+      </div>
+      <div class="contadores">
+        <div><b>73</b><span class="etiqueta">Libres</span></div>
+        <div><b>6</b><span class="etiqueta">Retenidas</span></div>
+        <div><b>11</b><span class="etiqueta">Vendidas</span></div>
+      </div>
+    </header>
+
+    <section aria-label="Mapa de sillas">
+      <p class="escenario etiqueta">Escenario</p>
+      <div id="mapa"></div>
+      <div class="leyenda">
+        <span><i class="silla"></i>Disponible</span>
+        <span><i class="silla silla--mia"></i>Tuya</span>
+        <span><i class="silla silla--otro"></i>Retenida por otro</span>
+        <span><i class="silla silla--vendida"></i>Vendida</span>
+      </div>
+    </section>
+
+    <aside class="talon" aria-label="Tu boleta">
+      <p class="etiqueta">Tu boleta · WEB-7K2Q9A</p>
+      <ul>
+        <li><span>A-4</span><span>VIP</span><span>$120.000</span><span>00:54</span><button class="quitar" aria-label="Quitar A-4">×</button></li>
+        <li><span>A-5</span><span>VIP</span><span>$120.000</span><span>01:12</span><button class="quitar" aria-label="Quitar A-5">×</button></li>
+      </ul>
+      <div class="corte"></div>
+      <div class="total"><span class="etiqueta">Total</span><b>$240.000</b></div>
+      <button class="boton">Pagar</button>
+    </aside>
+
+    <section class="muestras" aria-label="Otras vistas">
+      <div class="panel">
+        <p class="etiqueta">Confirmar compra</p>
+        <h2>2 sillas · $240.000</h2>
+        <label>Nombre completo<input value="Ana Pérez"></label>
+        <label>Correo electrónico<input class="invalido" value="ana.correo"></label>
+        <p class="error">El correo electrónico del comprador es inválido.</p>
+        <button class="boton">Confirmar</button>
+      </div>
+      <div class="panel">
+        <p class="etiqueta">Reserva confirmada</p>
+        <p class="codigo">RES-8F3A1C2D</p>
+        <p>A-4 · A-5 — VIP</p>
+        <p style="margin-top: 8px"><b>Total $240.000</b></p>
+        <p class="etiqueta" style="margin-top: 24px">Guarda este código</p>
+      </div>
+      <div>
+        <div class="aviso">La silla B-3 ya no se encuentra disponible.</div>
+        <div class="aviso aviso--info">Bloqueo renovado: 90 s.</div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Solo para el mockup: pinta las 90 sillas con estados de ejemplo.
+    const ZONAS = [
+      { nombre: 'VIP · $120.000', filas: 'AB' },
+      { nombre: 'Platea · $75.000', filas: 'CDE' },
+      { nombre: 'General · $45.000', filas: 'FGHI' },
+    ];
+    const MIAS = ['A-4', 'A-5'];
+    const OTROS = ['B-3', 'B-4', 'D-7', 'G-2'];
+    const VENDIDAS = ['C-1', 'C-2', 'C-3', 'E-9', 'E-10', 'F-5', 'F-6', 'H-1', 'H-2', 'H-3', 'I-10'];
+
+    const mapa = document.getElementById('mapa');
+    for (const { nombre, filas } of ZONAS) {
+      const zona = document.createElement('div');
+      zona.className = 'zona';
+      const titulo = document.createElement('p');
+      titulo.className = 'etiqueta';
+      titulo.textContent = nombre;
+      zona.appendChild(titulo);
+      for (const letra of filas) {
+        const fila = document.createElement('div');
+        fila.className = 'fila';
+        const rotulo = document.createElement('span');
+        rotulo.className = 'fila__letra';
+        rotulo.textContent = letra;
+        fila.appendChild(rotulo);
+        for (let n = 1; n <= 10; n++) {
+          const id = `${letra}-${n}`;
+          const silla = document.createElement('button');
+          silla.className = 'silla'
+            + (MIAS.includes(id) ? ' silla--mia' : '')
+            + (OTROS.includes(id) ? ' silla--otro' : '')
+            + (VENDIDAS.includes(id) ? ' silla--vendida' : '');
+          silla.title = id;
+          silla.setAttribute('aria-label', id);
+          fila.appendChild(silla);
+        }
+        zona.appendChild(fila);
+      }
+      mapa.appendChild(zona);
+    }
+  </script>
+</body>
+</html>
