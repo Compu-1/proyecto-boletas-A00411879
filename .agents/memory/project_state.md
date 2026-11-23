@@ -9,7 +9,8 @@ Actualizado: 2026-11-23. Lo actualiza la tarea de cierre de cada `tasks.md`.
 - **git flow** inicializado (`master`, `develop`). `.agents/` ya está en `develop`.
 - **Documentación**: un solo `README.md` en la raíz y un solo `docs/` (enunciado y wireframe); ver D-015.
 - **Specs cerradas**, ya en `develop`: `concurrencia-backend` (PR #1; 12 pruebas JUnit y `--test-concurrency` = 1), `tooling-webpack` (PR #2) `mapa-sillas` (PR #3; 13 pruebas JUnit, verificada a mano con dos ventanas de Chrome: cambio ajeno visible en 0,9 s, vencimiento a los 90,8 s, rechazo con aviso, sin conexión a los 0,4 s y recarga con el sistema de vuelta) y `carrito-temporizador` (PR #4; 15 pruebas JUnit y verificada a mano con dos pestañas). Lista en `feature/checkout-reservas`, pendiente de PR hacia `develop`: 21 pruebas JUnit, `--test-concurrency` = 1 y verificada a mano con dos pestañas (nombre vacío y `ana.correo.com` con su error y datos conservados; pago de A-1 y F-3 con `RES-` + 8 y $165.000, vendidas en la otra pestaña; doble clic en Confirmar da una sola compra; B-1 vencida rechaza todo y el resumen pasa a F-5; sin sillas "Elige al menos una silla para pagar"; segundo pago con código distinto; recarga conserva "Mis compras"; servidor detenido muestra sin conexión y B-7 sigue en el carrito).
-- **Spec en curso**: ninguna; queda solo `despliegue-vm`, opcional (ver "Siguiente").
+- **Despliegue** (`deploy/`, spec `despliegue-vm`, lista en `feature/despliegue-vm`): `./deploy/package.sh` arma `deploy/build/icesi-live-arena.tar.gz` (`server.jar` con Ice, `dist/`, `install.sh`, sitio de Nginx y servicio `systemd`); en la VM, `sudo ./install.sh` instala Java 17 y Nginx si faltan y deja la taquilla en `http://<ip>` (Nginx en el 80, `/ws` -> 10002). Verificada en Multipass (Ubuntu 24.04) desde VM limpia: instalación en 35 s y repetible, ruta profunda, cambio ajeno en 0,8 s, compra `RES-` con $165.000, cuenta desde 01:29 y liberación a los 90,8 s, sin conexión al detener el servicio, reinicio tras `kill -9` en 3,3 s y tras reiniciar la VM en 12,9 s.
+- **Spec en curso**: ninguna.
 
 ## Defectos conocidos del backend
 
@@ -21,4 +22,4 @@ Aviso conocido del frontend: `npm run build` muestra los avisos de tamaño del b
 
 ## Siguiente (orden sugerido de specs, una `feature/<slug>` cada uno)
 
-1. Opcional: `despliegue-vm` (+10 %). Al desplegar, comparar la hora (`date`) de la VM con la del navegador: la cuenta regresiva usa el reloj del navegador (D-031).
+1. En la sala: copiar el paquete a la VM y seguir la sección "Deployment on a VM" del README; comparar `date` de la VM con el equipo (D-031) y abrir la taquilla desde dos equipos. Luego marcar HU-14 y HU-15 en `epics.md`.
