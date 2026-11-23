@@ -1,7 +1,5 @@
-import { formatPrice } from '../format.js';
+import { formatPrice, ZONE_LABELS } from '../format.js';
 import { myCart, formatTime } from '../seats.js';
-
-const ZONE_LABELS = { vip: 'VIP', platea: 'Platea', general: 'General' };
 
 function element(tag, className, text) {
   const node = document.createElement(tag);
@@ -21,7 +19,7 @@ function setText(node, text) {
 // Talón de boleta con las sillas retenidas por el comprador: silla, zona, precio, tiempo y total.
 // Cada línea se crea una vez y solo se actualiza su tiempo: el reloj repinta cuatro veces por
 // segundo (D-032) y reconstruir el botón "quitar" podría perder un clic.
-export function Cart(contenedor, { onRemove }) {
+export function Cart(contenedor, { onRemove, onPay }) {
   const lines = new Map(); // id de silla -> { item, time }
   contenedor.classList.add('cart');
 
@@ -33,7 +31,10 @@ export function Cart(contenedor, { onRemove }) {
   const totalLabel = element('span', 'cart__total-label', 'Total');
   const totalAmount = element('span', 'cart__total-amount');
   total.append(totalLabel, totalAmount);
-  contenedor.append(title, empty, list, cut, total);
+  const pay = element('button', 'cart__pay', 'Pagar');
+  pay.type = 'button';
+  pay.addEventListener('click', () => onPay());
+  contenedor.append(title, empty, list, cut, total, pay);
 
   // Un solo oyente para todos los botones de quitar
   list.addEventListener('click', (event) => {
@@ -68,6 +69,7 @@ export function Cart(contenedor, { onRemove }) {
       list.hidden = isEmpty;
       cut.hidden = isEmpty;
       total.hidden = isEmpty;
+      pay.hidden = isEmpty;
 
       const ids = new Set(items.map(({ id }) => id));
       lines.forEach((line, id) => {

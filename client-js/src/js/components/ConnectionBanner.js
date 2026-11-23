@@ -1,4 +1,4 @@
-const OFFLINE_MESSAGE = 'Sin conexión con la taquilla. Recarga la página para intentar de nuevo.';
+export const OFFLINE_MESSAGE = 'Sin conexión con la taquilla. Recarga la página para intentar de nuevo.';
 
 // Estado de la conexión: "Conectado" si hay conexión, franja de aviso si se perdió, nada mientras conecta
 export function ConnectionBanner(contenedor) {

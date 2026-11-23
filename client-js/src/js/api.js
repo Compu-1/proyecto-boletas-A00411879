@@ -98,3 +98,30 @@ export async function releaseSeat(seatId, clientId) {
     throw translate(error);
   }
 }
+
+// Paga las sillas retenidas; si el servidor rechaza el pago, lanza Error con su reason (D-037)
+export async function confirmBooking(seatIds, clientId, name, email) {
+  try {
+    const { bookingCode, totalAmount, timestamp } = await proxy.confirmBooking(seatIds, clientId, name, email);
+    return { code: bookingCode, total: totalAmount, timestamp: timestamp.toNumber() };
+  } catch (error) {
+    throw translate(error);
+  }
+}
+
+// Compras confirmadas de este comprador, en el orden en que se hicieron
+export async function getMyBookings(clientId) {
+  try {
+    const bookings = await proxy.getMyBookings(clientId);
+    return bookings.map(({ bookingCode, seatIds, totalAmount, customerName, customerEmail, timestamp }) => ({
+      code: bookingCode,
+      seatIds: [...seatIds],
+      total: totalAmount,
+      name: customerName,
+      email: customerEmail,
+      timestamp: timestamp.toNumber(),
+    }));
+  } catch (error) {
+    throw translate(error);
+  }
+}

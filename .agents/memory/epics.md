@@ -14,3 +14,6 @@ Registro de HU. Lo actualiza `c-specify` al aprobar un spec (siguiente número l
 | HU-08 | Ver mis sillas retenidas con su cuenta regresiva | RF-3, RF-4 | [carrito-temporizador](../specs/carrito-temporizador/spec.md) | [x] |
 | HU-09 | Liberar sola una silla cuando vence su tiempo | RF-3 | [carrito-temporizador](../specs/carrito-temporizador/spec.md) | [x] |
 | HU-10 | Quitar una silla de mi carrito | RF-4, RF-7 | [carrito-temporizador](../specs/carrito-temporizador/spec.md) | [x] |
+| HU-11 | Pagar mis sillas con nombre y correo | RF-5, RF-7 | [checkout-reservas](../specs/checkout-reservas/spec.md) | [x] |
+| HU-12 | Recibir mi comprobante con el código de reserva | RF-5, RNF-1 | [checkout-reservas](../specs/checkout-reservas/spec.md) | [x] |
+| HU-13 | Consultar mis compras | RF-6 | [checkout-reservas](../specs/checkout-reservas/spec.md) | [x] |
