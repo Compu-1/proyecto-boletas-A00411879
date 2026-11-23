@@ -34,6 +34,6 @@ Alcances: `server`, `slice`, `client-java`, `client-js`, `agents`.
 
 Ejemplos: `fix(server): sincroniza lockSeat para evitar doble bloqueo`, `feat(client-js): agrega mapa de sillas`, `docs(agents): registra decisión de polling`.
 
-- Si hace falta contexto: línea en blanco y cuerpo con el porqué.
+- Un solo mensaje corto: `git commit -m "tipo(alcance): descripción"`. Sin cuerpo, sin firma ni `Co-Authored-By`. El porqué va en `memory/decisions.md`.
 - Cada commit deja el proyecto compilando (`./gradlew build` / `npm run build`).
 - Sin marcadores de conflicto: `grep -rn '<<<<<<<' codigo_base client-js` vacío.

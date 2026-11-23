@@ -1,6 +1,6 @@
 # Constitución del proyecto
 
-Fuente: enunciado `Proyecto_Reserva_Boletas_Ice_Webpack.pdf` (Computación en Internet I, Icesi, 2026-2). Si algo aquí contradice el enunciado, manda el enunciado.
+Fuente: enunciado `docs/Proyecto_Reserva_Boletas_Ice_Webpack.pdf` (Computación en Internet I, Icesi, 2026-2). Si algo aquí contradice el enunciado, manda el enunciado.
 
 ## Visión
 

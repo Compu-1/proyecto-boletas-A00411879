@@ -6,7 +6,9 @@ Actualizado: 2026-11-22. Lo actualiza la tarea de cierre de cada `tasks.md`.
 
 - **Backend** (`codigo_base/`): compila y corre (TCP 10000 + WS 10002). Estado en memoria: `HashMap seatsMap` y `ArrayList bookingsList` en `BookingServiceImpl`; reiniciar el servidor o `resetSeats()` lo borra todo.
 - **Frontend** (`client-js/`): no existe.
-- **git flow** inicializado (`master`, `develop`). `.agents/` creado en `feature/agents-setup`.
+- **git flow** inicializado (`master`, `develop`). `.agents/` ya está en `develop`.
+- **Documentación**: un solo `README.md` en la raíz y un solo `docs/` (enunciado y wireframe); ver D-015.
+- **Spec en curso**: `concurrencia-backend` (spec y plan aprobados; falta `c-task`).
 
 ## Defectos conocidos del backend
 
@@ -17,7 +19,6 @@ Actualizado: 2026-11-22. Lo actualiza la tarea de cierre de cada `tasks.md`.
 | 3 | `confirmBooking` acepta sillas `AVAILABLE` que el comprador nunca retuvo | RF-5 | solo rechaza `BOOKED` y retenidas por otro |
 | 4 | Expiración perezosa: `getAllSeats`, `getSeatsByZone` y `getSeat` devuelven `LOCKED` aunque el bloqueo ya venció | RF-1, RF-3 | `isLockExpired()` solo se usa en lock/release/confirm/getMyLockedSeats/contadores |
 | 5 | Los getters devuelven las instancias internas de `Seat` (mutables), no copias | RNF-1 | `getAllSeats`, `getSeat` |
-| 6 | `codigo_base/README.md` documenta `./gradlew runClient --args=...`, que falla | — | usar `:client:runClient` |
 
 ## Siguiente (orden sugerido de specs, una `feature/<slug>` cada uno)
 
