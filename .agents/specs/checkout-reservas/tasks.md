@@ -7,7 +7,7 @@ Comandos de `codigo_base/` con `JAVA_HOME` e `ICE_HOME` exportados (`conventions
 ## Resumen
 
 - [x] T1: Rama y documentos del spec
-- [ ] T2: Validación del pago en el servidor y pruebas JUnit (paralela con T3)
+- [x] T2: Validación del pago en el servidor y pruebas JUnit (paralela con T3)
 - [ ] T3: Capa `api` y `store` (paralela con T2)
 - [ ] T4: Botón Pagar y diálogo `CheckoutModal`
 - [ ] T5: Comprobante `Receipt` y sección `MyBookings` (paralela con T4)
@@ -26,10 +26,10 @@ Comandos de `codigo_base/` con `JAVA_HOME` e `ICE_HOME` exportados (`conventions
 ## T2: Validación del pago en el servidor y pruebas JUnit (paralela con T3)
 - **Archivos**: `codigo_base/server/src/main/java/co/icesi/booking/server/BookingServiceImpl.java`, `codigo_base/server/src/test/java/co/icesi/booking/server/BookingServiceImplTest.java` (modificar)
 - **Acciones**:
-  - [ ] Escribir primero las pruebas y verlas fallar: `hu11_datosInvalidos_mensaje` (nombre vacío o solo espacios; correo vacío, `ana@`, `ana.correo.com`, `ana @correo.com`; texto exacto y A-1 sigue retenida por Ana con el mismo `lockTimestamp`), `hu11_sinSillas_mensaje`, `hu12_sillaRepetida_rechaza` (texto exacto, 0 compras, A-1 sigue retenida), `hu12_codigosDistintos`, `hu13_misCompras_soloLasMias` (2 compras de Ana con totales, nombre y correo; 1 de Beto) y `hu13_sinCompras_vacio`.
-  - [ ] En `confirmBooking`, cambiar los textos por "Elige al menos una silla para pagar", "Escribe tu nombre" y "Escribe un correo válido", validar el correo con `trim()` y la constante `EMAIL_PATTERN` (D-037).
-  - [ ] En `confirmBooking`, rechazar con `InvalidBookingException("La silla <id> está repetida en el pedido.")` antes de revisar cada silla (defecto 1, RN-04); orden: sin sillas, nombre, correo, repetidas, cada silla.
-- **Verificación**: [ ] `./gradlew build` · [ ] `./gradlew :server:test --tests 'co.icesi.booking.server.BookingServiceImplTest'` (las nuevas y las 15 previas) · [ ] `--test-concurrency` con 1 ganador
+  - [x] Escribir primero las pruebas y verlas fallar: `hu11_datosInvalidos_mensaje` (nombre vacío o solo espacios; correo vacío, `ana@`, `ana.correo.com`, `ana @correo.com`; texto exacto y A-1 sigue retenida por Ana con el mismo `lockTimestamp`), `hu11_sinSillas_mensaje`, `hu12_sillaRepetida_rechaza` (texto exacto, 0 compras, A-1 sigue retenida), `hu12_codigosDistintos`, `hu13_misCompras_soloLasMias` (2 compras de Ana con totales, nombre y correo; 1 de Beto) y `hu13_sinCompras_vacio`.
+  - [x] En `confirmBooking`, cambiar los textos por "Elige al menos una silla para pagar", "Escribe tu nombre" y "Escribe un correo válido", validar el correo con `trim()` y la constante `EMAIL_PATTERN` (D-037).
+  - [x] En `confirmBooking`, rechazar con `InvalidBookingException("La silla <id> está repetida en el pedido")` antes de revisar cada silla (defecto 1, RN-04); orden: sin sillas, nombre, correo, repetidas, cada silla.
+- **Verificación**: [x] `./gradlew build` · [x] `./gradlew :server:test --tests 'co.icesi.booking.server.BookingServiceImplTest'` (las nuevas y las 15 previas) · [x] `--test-concurrency` con 1 ganador
 - **Commit**: `fix(server): valida datos y sillas repetidas al confirmar la compra`
 
 ## T3: Capa `api` y `store` (paralela con T2)

@@ -11,7 +11,7 @@ El contrato no cambia: ya existen `confirmBooking` y `getMyBookings`. En el serv
 | Capa | Archivo | Acción | Responsabilidad / firma pública |
 | :--- | :--- | :--- | :--- |
 | slice | `BookingService.ice` | sin cambios | `confirmBooking`, `getMyBookings`, `BookingRecord`, `BookingResult` ya existen |
-| server | `BookingServiceImpl.java` | modificar | `confirmBooking`: orden de validación sin sillas -> nombre -> correo -> repetidas -> cada silla (la de cada silla no cambia); textos "Elige al menos una silla para pagar", "Escribe tu nombre", "Escribe un correo válido", "La silla <id> está repetida en el pedido." (`InvalidBookingException`); correo con `trim()` y patrón constante `EMAIL_PATTERN` = `^[^\s@]+@[^\s@]+\.[^\s@]+$` |
+| server | `BookingServiceImpl.java` | modificar | `confirmBooking`: orden de validación sin sillas -> nombre -> correo -> repetidas -> cada silla (la de cada silla no cambia); textos "Elige al menos una silla para pagar", "Escribe tu nombre", "Escribe un correo válido", "La silla <id> está repetida en el pedido" (`InvalidBookingException`); correo con `trim()` y patrón constante `EMAIL_PATTERN` = `^[^\s@]+@[^\s@]+\.[^\s@]+$` |
 | test | `BookingServiceImplTest.java` | modificar | pruebas `hu11_*`, `hu12_*`, `hu13_*` (ver Pruebas) |
 | api | `client-js/src/js/api.js` | modificar | `export async function confirmBooking(seatIds, clientId, name, email)` -> `{ code, total, timestamp }`; `export async function getMyBookings(clientId)` -> `[{ code, seatIds, total, name, email, timestamp }]` (`Ice.Long` -> `toNumber()`) |
 | store | `client-js/src/js/store.js` | modificar | `checkout`: `null` o `{ items, sending, error }`; `receipt`: `null` o `{ code, items, total, name, email }`; `bookings`: `[]` |
