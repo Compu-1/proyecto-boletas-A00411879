@@ -13,7 +13,7 @@ Zones: VIP (rows A-B, $120.000), Platea (C-E, $75.000) and General (F-I, $45.000
 ```text
 codigo_base/   Gradle backend: common/ (Slice contract), server/ (service), client/ (Java console client)
 client-js/     frontend: vanilla JavaScript SPA with Webpack
-docs/          assignment (PDF and LaTeX source) and wireframe
+docs/          assignment (PDF and LaTeX source), wireframe and demo walkthrough (demostracion.md)
 .agents/       workflow: conventions, design, decisions, specs and skills
 AGENTS.md      guide for coding agents (CLAUDE.md imports it)
 ```
@@ -61,3 +61,7 @@ python3 -m http.server 8080 -d dist   # optional: serve dist/ at http://localhos
 ```
 
 `npm start` and `npm run build` generate the Ice stubs (`src/js/generated/`) on their own from the same `BookingService.ice` used by the backend; that folder is neither versioned nor edited. The browser talks to the server only over WebSocket (port 10002 of the same host as the page). Without a connection it shows a warning and the page must be reloaded.
+
+## Demo
+
+Step-by-step manual test of the whole system (server, concurrency test, Webpack and the buyer flow in two windows), in Spanish: [`docs/demostracion.md`](docs/demostracion.md).
