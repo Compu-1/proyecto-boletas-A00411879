@@ -67,7 +67,7 @@ Comandos de `codigo_base/` con `JAVA_HOME` e `ICE_HOME` exportados (`conventions
 - **Commit**: `feat(client-js): muestra el plano en vivo y retiene sillas`
 
 ## T7: Cierre
-- [ ] `./gradlew build`, `./gradlew test` y `npm run build` en verde
-- [ ] Actualizar `project_state.md` (spec cerrada, nota de que `carrito-temporizador` sigue), marcar HU-06 y HU-07 en `epics.md` y revisar `decisions.md`
+- [x] `./gradlew build`, `./gradlew test` y `npm run build` en verde
+- [x] Actualizar `project_state.md` (spec cerrada, nota de que `carrito-temporizador` sigue), marcar HU-06 y HU-07 en `epics.md` y revisar `decisions.md`
 - **Commit**: `docs(agents): cierra mapa-sillas`
 - [ ] `git flow feature finish mapa-sillas` (solo si el usuario lo pide)
