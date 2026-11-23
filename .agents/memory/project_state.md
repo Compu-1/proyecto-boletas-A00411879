@@ -8,7 +8,7 @@ Actualizado: 2026-11-22. Lo actualiza la tarea de cierre de cada `tasks.md`.
 - **Frontend** (`client-js/`): no existe.
 - **git flow** inicializado (`master`, `develop`). `.agents/` ya está en `develop`.
 - **Documentación**: un solo `README.md` en la raíz y un solo `docs/` (enunciado y wireframe); ver D-015.
-- **Spec en curso**: `concurrencia-backend` implementada en `feature/concurrencia-backend` (12 pruebas JUnit en verde y `--test-concurrency` = 1); falta `git flow feature finish`.
+- **Specs cerradas**: `concurrencia-backend`, ya en `develop` (PR #1; 12 pruebas JUnit en verde y `--test-concurrency` = 1). Sin spec en curso.
 
 ## Defectos conocidos del backend
 
