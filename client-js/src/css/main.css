@@ -538,3 +538,92 @@ body {
   opacity: 0.5;
   cursor: wait;
 }
+
+.receipt__code {
+  margin: var(--e3) 0 var(--e1);
+  font-family: var(--fuente-mono);
+  font-size: clamp(1.75rem, 8vw, 2.5rem);
+  font-weight: bold;
+  letter-spacing: 0.04em;
+}
+
+.receipt__hint {
+  margin: 0 0 var(--e4);
+  color: var(--gris-oscuro);
+  font-size: 0.8125rem;
+}
+
+.receipt__buyer {
+  margin: 0 0 var(--e1);
+  font-size: 0.875rem;
+}
+
+.receipt .panel__button {
+  width: 100%;
+  margin-top: var(--e3);
+}
+
+.my-bookings [hidden] {
+  display: none;
+}
+
+.my-bookings {
+  padding: var(--e3);
+  border: 1px solid var(--linea);
+}
+
+.my-bookings__title {
+  margin: 0 0 var(--e3);
+  color: var(--gris);
+  font-family: var(--fuente-mono);
+  font-size: 0.6875rem;
+  font-weight: normal;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.my-bookings__empty {
+  margin: 0;
+  color: var(--gris);
+}
+
+.my-bookings__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.my-bookings__item {
+  padding-bottom: var(--e3);
+  border-bottom: 1px dashed var(--linea);
+}
+
+.my-bookings__item:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.my-bookings__head {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0 var(--e1);
+  font-family: var(--fuente-mono);
+}
+
+.my-bookings__code {
+  font-weight: bold;
+}
+
+.my-bookings__seats,
+.my-bookings__buyer {
+  margin: 0;
+  color: var(--gris);
+  font-size: 0.8125rem;
+}
+
+.my-bookings__seats {
+  font-family: var(--fuente-mono);
+}
