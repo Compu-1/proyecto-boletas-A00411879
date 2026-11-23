@@ -255,18 +255,24 @@ public class BookingServiceImpl implements BookingService {
                 throw new BookingException("La silla " + seatId + " ya fue vendida definitivamente.");
             }
             if (seat.state == SeatState.LOCKED) {
-                if (isLockExpired(seat)) {
-                    throw new LockExpiredException("El bloqueo temporal de la silla " + seatId + " ha expirado.");
-                }
-                if (!clientId.equals(seat.lockedByClientId)) {
+                boolean expired = isLockExpired(seat);
+                boolean ownedByBuyer = clientId.equals(seat.lockedByClientId);
+                if (!expired && !ownedByBuyer) {
                     throw new BookingException("La silla " + seatId + " se encuentra bloqueada por otro comprador.");
                 }
+                if (expired && ownedByBuyer) {
+                    throw new LockExpiredException("El bloqueo temporal de la silla " + seatId + " ha expirado.");
+                }
+            }
+            // Solo se paga lo retenido por el mismo comprador y vigente (RN-03)
+            if (seat.state != SeatState.LOCKED || isLockExpired(seat)) {
+                throw new InvalidBookingException("La silla " + seatId + " no está retenida a tu nombre.");
             }
             totalAmount += seat.price;
             validatedSeats.add(seat);
         }
 
-        // Paso 2: Confirmación y cambio a BOOKED (Proceso no atómico)
+        // Paso 2: Confirmación y cambio a BOOKED (atómico: todas las sillas pasaron el paso 1 dentro del mismo candado)
         for (Seat s : validatedSeats) {
             s.state = SeatState.BOOKED;
             s.lockedByClientId = clientId;

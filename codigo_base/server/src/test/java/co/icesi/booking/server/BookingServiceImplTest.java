@@ -3,6 +3,7 @@ package co.icesi.booking.server;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,9 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.junit.Before;
 import org.junit.Test;
 
+import BookingApp.BookingException;
 import BookingApp.BookingRecord;
+import BookingApp.BookingResult;
 import BookingApp.EventInfo;
 import BookingApp.LockResult;
 import BookingApp.Seat;
@@ -224,5 +227,123 @@ public class BookingServiceImplTest {
         BookingRecord first = service.getMyBookings("Ana", null)[0];
         first.totalAmount = 1.0;
         assertEquals(120000.0, service.getMyBookings("Ana", null)[0].totalAmount, 0.0);
+    }
+
+    private BookingResult pay(String clientId, String... seatIds) throws Exception {
+        return service.confirmBooking(seatIds, clientId, clientId + " Prueba", clientId.toLowerCase() + "@correo.com", null);
+    }
+
+    // HU-02: Pagar sillas retenidas y vigentes
+    @Test
+    public void hu02_pagarVigentes() throws Exception {
+        service.lockSeat("A-1", "Ana", null);
+        service.lockSeat("A-2", "Ana", null);
+        now.addAndGet(30_000L);
+
+        BookingResult result = pay("Ana", "A-1", "A-2");
+
+        assertTrue(result.success);
+        assertTrue(result.bookingCode, result.bookingCode.matches("RES-[0-9A-F]{8}"));
+        assertEquals(240000.0, result.totalAmount, 0.0);
+        assertEquals(SeatState.BOOKED, service.getSeat("A-1", null).state);
+        assertEquals(SeatState.BOOKED, service.getSeat("A-2", null).state);
+        assertEquals(1, service.getMyBookings("Ana", null).length);
+    }
+
+    // HU-02: Ana envía dos veces el mismo pago en el mismo instante
+    @Test
+    public void hu02_pagoDobleSimultaneo() throws Exception {
+        service.lockSeat("A-1", "Ana", null);
+        service.lockSeat("A-2", "Ana", null);
+        List<Callable<Object>> tasks = new ArrayList<>();
+        for (int i = 0; i < 2; i++) {
+            tasks.add(() -> pay("Ana", "A-1", "A-2"));
+        }
+
+        List<Object> results = runAtOnce(tasks);
+
+        int paid = 0;
+        int rejected = 0;
+        for (Object result : results) {
+            if (result instanceof BookingResult) {
+                paid++;
+            } else if (result instanceof BookingException) {
+                assertTrue(((BookingException) result).reason.startsWith("La silla A-1 ya fue vendida definitivamente"));
+                rejected++;
+            }
+        }
+        assertEquals(1, paid);
+        assertEquals(1, rejected);
+        assertEquals(1, service.getMyBookings("Ana", null).length);
+    }
+
+    // HU-02: Ana y Beto pagan la misma silla en el mismo instante
+    @Test
+    public void hu02_dosCompradoresMismaSilla() throws Exception {
+        service.lockSeat("A-1", "Ana", null);
+        List<Callable<Object>> tasks = new ArrayList<>();
+        tasks.add(() -> pay("Ana", "A-1"));
+        tasks.add(() -> pay("Beto", "A-1"));
+
+        List<Object> results = runAtOnce(tasks);
+
+        assertTrue("Ana debía recibir código: " + results.get(0), results.get(0) instanceof BookingResult);
+        assertTrue("Beto no debía recibir código: " + results.get(1), results.get(1) instanceof BookingException);
+        assertEquals(0, service.getMyBookings("Beto", null).length);
+        assertEquals(1, service.getMyBookings("Ana", null).length);
+        Seat sold = service.getSeat("A-1", null);
+        assertEquals(SeatState.BOOKED, sold.state);
+        assertEquals("Ana", sold.lockedByClientId);
+    }
+
+    // HU-02: El pago se rechaza completo si una silla no es válida (casos del spec y vencida de otro)
+    @Test
+    public void hu02_sillaInvalida_noVendeNinguna() throws Exception {
+        String[][] cases = {
+            {"disponible", "La silla C-5 no está retenida a tu nombre"},
+            {"retenidaPorBeto", "La silla C-5 se encuentra bloqueada por otro comprador"},
+            {"vendida", "La silla C-5 ya fue vendida definitivamente"},
+            {"retenidaPorAnaVencida", "El bloqueo temporal de la silla C-5 ha expirado"},
+            {"retenidaPorBetoVencida", "La silla C-5 no está retenida a tu nombre"},
+        };
+        for (String[] row : cases) {
+            service.resetSeats(null);
+            int booked = 0;
+            switch (row[0]) {
+                case "retenidaPorBeto":
+                    service.lockSeat("C-5", "Beto", null);
+                    break;
+                case "vendida":
+                    service.lockSeat("C-5", "Beto", null);
+                    pay("Beto", "C-5");
+                    booked = 1;
+                    break;
+                case "retenidaPorAnaVencida":
+                    service.lockSeat("C-5", "Ana", null);
+                    now.addAndGet(60_000L);
+                    break;
+                case "retenidaPorBetoVencida":
+                    service.lockSeat("C-5", "Beto", null);
+                    now.addAndGet(60_000L);
+                    break;
+                default:
+                    break;
+            }
+            service.lockSeat("A-1", "Ana", null);
+            now.addAndGet(30_000L);
+
+            try {
+                pay("Ana", "A-1", "C-5");
+                fail(row[0] + ": el pago debía rechazarse");
+            } catch (BookingException e) {
+                assertTrue(row[0] + ": " + e.reason, e.reason.startsWith(row[1]));
+            }
+
+            assertEquals(row[0], 0, service.getMyBookings("Ana", null).length);
+            Seat a1 = service.getSeat("A-1", null);
+            assertEquals(row[0], SeatState.LOCKED, a1.state);
+            assertEquals(row[0], "Ana", a1.lockedByClientId);
+            assertEquals(row[0], booked, countByState(service.getAllSeats(null), SeatState.BOOKED));
+        }
     }
 }

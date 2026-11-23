@@ -10,7 +10,7 @@ Comandos desde `codigo_base/`, con `JAVA_HOME` e `ICE_HOME` exportados (`convent
 - [x] T2: Reloj inyectable y vencimiento exacto a los 90 s
 - [x] T3: Exclusión mutua en las operaciones del servicio
 - [x] T4: Consultas con estado efectivo y copias
-- [ ] T5: Pago todo o nada
+- [x] T5: Pago todo o nada
 - [ ] T6: Cierre
 
 ## T1: Documentos del spec en la rama
@@ -52,8 +52,8 @@ Comandos desde `codigo_base/`, con `JAVA_HOME` e `ICE_HOME` exportados (`convent
 ## T5: Pago todo o nada
 - **Archivos**: `BookingServiceImpl.java` (modificar), `BookingServiceImplTest.java` (modificar)
 - **Acciones**:
-  - [ ] Escribir `hu02_pagarVigentes`, `hu02_pagoDobleSimultaneo`, `hu02_dosCompradoresMismaSilla` y `hu02_sillaInvalida_noVendeNinguna` con sus 4 casos; ver en rojo los de silla no retenida.
-  - [ ] En `confirmBooking` validar todas las sillas antes de vender ninguna, con el orden del plan, y rechazar las disponibles con `InvalidBookingException` ("La silla X no está retenida a tu nombre.").
+  - [x] Escribir `hu02_pagarVigentes`, `hu02_pagoDobleSimultaneo`, `hu02_dosCompradoresMismaSilla` y `hu02_sillaInvalida_noVendeNinguna` con sus 4 casos; ver en rojo los de silla no retenida.
+  - [x] En `confirmBooking` validar todas las sillas antes de vender ninguna, con el orden del plan, y rechazar las disponibles con `InvalidBookingException` ("La silla X no está retenida a tu nombre.").
 - **Verificación**: [ ] `./gradlew build` · [ ] prueba de la clase en verde, repetida 3 veces
 - **Commit**: `fix(server): rechaza el pago de sillas no retenidas y vende todo o nada`
 
