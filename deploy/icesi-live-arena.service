@@ -1,0 +1,16 @@
+# Servicio systemd del servidor de Icesi Live Arena (D-046). Lo copia install.sh a /etc/systemd/system/.
+[Unit]
+Description=Icesi Live Arena - servidor ZeroC Ice (TCP 10000 + WebSocket 10002)
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/java -jar /opt/icesi-live-arena/server.jar
+# Si el proceso muere, systemd lo vuelve a arrancar a los 3 s
+Restart=always
+RestartSec=3
+# Usuario temporal sin privilegios creado por systemd
+DynamicUser=yes
+
+[Install]
+# Arranca solo cuando la VM enciende
+WantedBy=multi-user.target

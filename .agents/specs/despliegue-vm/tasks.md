@@ -9,7 +9,7 @@ Comandos de `codigo_base/` con `JAVA_HOME` e `ICE_HOME` exportados (`conventions
 - [x] T1: Rama y documentos del spec
 - [x] T2: Jar ejecutable del servidor
 - [x] T3: Canal WebSocket según el origen en `api.js` (paralela con T2)
-- [ ] T4: Configuración de Nginx y servicio `systemd` (paralela con T2 y T3)
+- [x] T4: Configuración de Nginx y servicio `systemd` (paralela con T2 y T3)
 - [ ] T5: Scripts `package.sh` e `install.sh`
 - [ ] T6: Prueba completa en la VM de Multipass
 - [ ] T7: Pasos de despliegue en el README
@@ -41,9 +41,9 @@ Comandos de `codigo_base/` con `JAVA_HOME` e `ICE_HOME` exportados (`conventions
 ## T4: Configuración de Nginx y servicio `systemd` (paralela con T2 y T3)
 - **Archivos**: `deploy/icesi-live-arena.conf`, `deploy/icesi-live-arena.service` (crear)
 - **Acciones**:
-  - [ ] Crear el `server` de Nginx: `listen 80 default_server`, `root /var/www/icesi-live-arena`, `try_files $uri /index.html`, `gzip` para JS y CSS, caché de 1 año para `bundle.*.js` y `location /ws` con `proxy_pass http://127.0.0.1:10002/`, `proxy_http_version 1.1`, `Upgrade`, `Connection "upgrade"` y `proxy_read_timeout 120s`; un comentario por bloque (D-043).
-  - [ ] Crear la unidad `systemd` con `After=network.target`, `ExecStart=/usr/bin/java -jar /opt/icesi-live-arena/server.jar`, `Restart=always`, `RestartSec=3`, `DynamicUser=yes` y `WantedBy=multi-user.target` (D-046).
-- **Verificación**: [ ] revisión contra la tabla del plan (se prueban de verdad en T6)
+  - [x] Crear el `server` de Nginx: `listen 80 default_server`, `root /var/www/icesi-live-arena`, `try_files $uri /index.html`, `gzip` para JS y CSS, caché de 1 año para `bundle.*.js` y `location /ws` con `proxy_pass http://127.0.0.1:10002/`, `proxy_http_version 1.1`, `Upgrade`, `Connection "upgrade"` y `proxy_read_timeout 120s`; un comentario por bloque (D-043).
+  - [x] Crear la unidad `systemd` con `After=network.target`, `ExecStart=/usr/bin/java -jar /opt/icesi-live-arena/server.jar`, `Restart=always`, `RestartSec=3`, `DynamicUser=yes` y `WantedBy=multi-user.target` (D-046).
+- **Verificación**: [x] revisión contra la tabla del plan (se prueban de verdad en T6)
 - **Commit**: `chore(deploy): agrega la configuración de nginx y el servicio systemd`
 
 ## T5: Scripts `package.sh` e `install.sh`
