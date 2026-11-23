@@ -4,7 +4,7 @@ Guía para agentes de código (Claude Code, Codex u otros) en este repositorio.
 
 ## Proyecto
 
-**Icesi Live Arena**: reserva de boletas con backend Java 17 + ZeroC Ice 3.7 (TCP 10000 + WebSocket 10002) y frontend SPA en JavaScript vainilla + Webpack. Proyecto final de Computación en Internet I (Icesi). Enunciado: `Proyecto_Reserva_Boletas_Ice_Webpack.pdf` (fuente `.tex`); wireframe: `mockup_componentes.png`.
+**Icesi Live Arena**: reserva de boletas con backend Java 17 + ZeroC Ice 3.7 (TCP 10000 + WebSocket 10002) y frontend SPA en JavaScript vainilla + Webpack. Proyecto final de Computación en Internet I (Icesi). Enunciado: `docs/Proyecto_Reserva_Boletas_Ice_Webpack.pdf` (fuente `.tex`); wireframe: `docs/mockup_componentes.png`.
 
 ## Mapa
 
@@ -12,6 +12,8 @@ Guía para agentes de código (Claude Code, Codex u otros) en este repositorio.
 | :--- | :--- |
 | `codigo_base/` | backend Gradle: `common/` (contrato Slice), `server/` (servant), `client/` (cliente Java de pruebas) |
 | `client-js/` | frontend (por crear) |
+| `docs/` | enunciado (PDF y `.tex`), logo y wireframe |
+| `README.md` | comandos de ejecución para personas (único README del repo) |
 | `.agents/memory/constitution.md` | visión, rol, RF/RNF, rúbrica: **leer primero** |
 | `.agents/memory/project_state.md` | estado actual, defectos conocidos, orden de trabajo |
 | `.agents/memory/decisions.md` | decisiones de diseño (una fila cada una) |

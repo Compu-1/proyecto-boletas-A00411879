@@ -1,0 +1,7 @@
+.DS_Store
+
+# LaTeX: artefactos de compilación del enunciado
+docs/*.aux
+docs/*.log
+docs/*.out
+docs/*.synctex.gz
