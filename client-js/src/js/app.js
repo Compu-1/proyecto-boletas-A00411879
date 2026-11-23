@@ -1,10 +1,14 @@
 import '../css/main.css';
-import { connect, getEventInfo, getSeats, lockSeat, releaseSeat } from './api.js';
+import { connect, getEventInfo, getSeats, lockSeat, releaseSeat, confirmBooking, getMyBookings } from './api.js';
 import { getState, setState, subscribe } from './store.js';
+import { myCart } from './seats.js';
 import { EventHeader } from './components/EventHeader.js';
 import { SeatMap } from './components/SeatMap.js';
 import { Cart } from './components/Cart.js';
-import { ConnectionBanner } from './components/ConnectionBanner.js';
+import { CheckoutModal } from './components/CheckoutModal.js';
+import { Receipt } from './components/Receipt.js';
+import { MyBookings } from './components/MyBookings.js';
+import { ConnectionBanner, OFFLINE_MESSAGE } from './components/ConnectionBanner.js';
 import { Toast } from './components/Toast.js';
 
 const REFRESH_MS = 1000; // D-022: máximo 2 s para ver lo que hacen los demás
@@ -12,7 +16,13 @@ const CLOCK_MS = 250; // D-032: la cuenta regresiva no salta segundos aunque la 
 
 const eventHeader = EventHeader(document.getElementById('event-header'));
 const seatMap = SeatMap(document.getElementById('seat-area'), { onSeatClick: handleSeatClick });
-const cart = Cart(document.getElementById('cart'), { onRemove: handleRemove });
+const cart = Cart(document.getElementById('cart'), { onRemove: handleRemove, onPay: handlePay });
+const checkoutModal = CheckoutModal(document.getElementById('checkout'), {
+  onConfirm: handleConfirm,
+  onCancel: handleCancel,
+});
+const receipt = Receipt(document.getElementById('receipt'), { onClose: handleCloseReceipt });
+const myBookings = MyBookings(document.getElementById('my-bookings'));
 const connectionBanner = ConnectionBanner(document.getElementById('connection-banner'));
 const toast = Toast(document.getElementById('toast'));
 
@@ -23,6 +33,9 @@ function render(state) {
   eventHeader.render(state);
   seatMap.render(state);
   cart.render(state);
+  checkoutModal.render(state);
+  receipt.render(state);
+  myBookings.render(state);
   if (state.connection !== lastConnection) {
     lastConnection = state.connection;
     connectionBanner.render(state);
@@ -118,6 +131,64 @@ async function handleRemove(seatId) {
   }
 }
 
+// Compras de esta sesión: solo cambian cuando este comprador paga (D-041)
+async function refreshBookings() {
+  try {
+    setState({ bookings: await getMyBookings(getState().clientId) });
+  } catch (error) {
+    console.error(error.message);
+    if (error.isConnectionError) {
+      setState({ connection: 'offline' });
+    }
+  }
+}
+
+// Sillas que se van a pagar: las del carrito, sin el tiempo restante
+function cartItems(state) {
+  return myCart(state).map(({ id, zone, price }) => ({ id, zone, price }));
+}
+
+// El pago se hace sobre la lista congelada al abrir (D-038)
+function handlePay() {
+  setState({ checkout: { items: cartItems(getState()), sending: false, error: '' } });
+}
+
+// Con un pago en curso no se cierra: la respuesta decide si sale el comprobante
+function handleCancel() {
+  const { checkout } = getState();
+  if (checkout && !checkout.sending) {
+    setState({ checkout: null });
+  }
+}
+
+async function handleConfirm({ name, email }) {
+  const { checkout, clientId } = getState();
+  if (!checkout || checkout.sending) {
+    return;
+  }
+  // Un solo pago a la vez (D-040)
+  setState({ checkout: { ...checkout, sending: true, error: '' } });
+  try {
+    const { code, total } = await confirmBooking(checkout.items.map(({ id }) => id), clientId, name, email);
+    setState({ checkout: null, receipt: { code, items: checkout.items, total, name: name.trim(), email: email.trim() } });
+    await refreshSeats();
+    await refreshBookings();
+  } catch (error) {
+    if (error.isConnectionError) {
+      // El carrito y los datos escritos no cambian (RN-08)
+      setState({ connection: 'offline', checkout: { ...checkout, sending: false, error: OFFLINE_MESSAGE } });
+      return;
+    }
+    // Rechazo de negocio: el siguiente intento paga lo que sigue en el carrito (D-038)
+    await refreshSeats();
+    setState({ checkout: { items: cartItems(getState()), sending: false, error: error.message } });
+  }
+}
+
+function handleCloseReceipt() {
+  setState({ receipt: null });
+}
+
 async function start() {
   subscribe(render);
   render(getState());
@@ -132,6 +203,7 @@ async function start() {
     setState({ connection: 'offline' });
     return;
   }
+  refreshBookings();
   pollSeats();
 }
 
