@@ -8,7 +8,7 @@ Comandos de `codigo_base/` con `JAVA_HOME` e `ICE_HOME` exportados (`conventions
 
 - [x] T1: Rama y documentos del spec
 - [x] T2: Mensaje de rechazo en el servidor y sus pruebas
-- [ ] T3: Capa `api` y `store` (paralela con T2)
+- [x] T3: Capa `api` y `store` (paralela con T2)
 - [ ] T4: Plano de sillas `SeatMap` con sus estilos (paralela con T5)
 - [ ] T5: Contadores del encabezado y `Toast` (paralela con T4)
 - [ ] T6: Conexión de todo en `app.js` y verificación en dos ventanas
@@ -34,8 +34,8 @@ Comandos de `codigo_base/` con `JAVA_HOME` e `ICE_HOME` exportados (`conventions
 ## T3: Capa `api` y `store` (paralela con T2)
 - **Archivos**: `client-js/src/js/api.js`, `client-js/src/js/store.js` (modificar)
 - **Acciones**:
-  - [ ] En `api.js`, agregar `getSeats()` que llama a `getAllSeats()` y devuelve `[{ id, zone, row, number, price, state, lockedBy }]` con `zone` y `state` en texto (`'vip'`, `'locked'`...), y `lockSeat(seatId, clientId)` que devuelve vacío o lanza `Error` con el `reason`; ambas pasan por `translate`.
-  - [ ] En `store.js`, agregar `seats: []`, `pendingSeats: new Set()` y `clientId`, tomado de `sessionStorage` o generado una vez con formato `WEB-XXXXXX` (D-025).
+  - [x] En `api.js`, agregar `getSeats()` que llama a `getAllSeats()` y devuelve `[{ id, zone, row, number, price, state, lockedBy }]` con `zone` y `state` en texto (`'vip'`, `'locked'`...), y `lockSeat(seatId, clientId)` que devuelve vacío o lanza `Error` con el `reason`; ambas pasan por `translate`.
+  - [x] En `store.js`, agregar `seats: []`, `pendingSeats: new Set()` y `clientId`, tomado de `sessionStorage` o generado una vez con formato `WEB-XXXXXX` (D-025).
 - **Verificación**: [ ] `npm run build` · [ ] manual: `getState().clientId` en la consola conserva el valor al recargar la pestaña
 - **Commit**: `feat(client-js): agrega consulta y retención de sillas en api y store`
 

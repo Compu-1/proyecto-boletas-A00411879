@@ -9,6 +9,10 @@ const WS_PORT = 10002;
 const TIMEOUT_MS = 10000;
 const CONNECTION_ERROR = 'Sin conexión con la taquilla.';
 
+// Los enums de Slice llegan como objetos; la aplicación solo ve estos textos
+const ZONES = { ZONEVIP: 'vip', ZONEPLATEA: 'platea', ZONEGENERAL: 'general' };
+const STATES = { AVAILABLE: 'available', LOCKED: 'locked', BOOKED: 'booked' };
+
 let communicator = null;
 let proxy = null;
 
@@ -52,6 +56,32 @@ export async function getEventInfo() {
   try {
     const { name, date, venue, vipPrice, plateaPrice, generalPrice } = await proxy.getEventInfo();
     return { name, date, venue, prices: { vip: vipPrice, platea: plateaPrice, general: generalPrice } };
+  } catch (error) {
+    throw translate(error);
+  }
+}
+
+export async function getSeats() {
+  try {
+    const seats = await proxy.getAllSeats();
+    return seats.map(({ id, zone, row, number, price, state, lockedByClientId }) => ({
+      id,
+      zone: ZONES[zone.name],
+      row,
+      number,
+      price,
+      state: STATES[state.name],
+      lockedBy: lockedByClientId,
+    }));
+  } catch (error) {
+    throw translate(error);
+  }
+}
+
+// Retiene la silla para el comprador; si no se puede, lanza Error con el reason del servidor
+export async function lockSeat(seatId, clientId) {
+  try {
+    await proxy.lockSeat(seatId, clientId);
   } catch (error) {
     throw translate(error);
   }
