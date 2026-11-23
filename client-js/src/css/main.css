@@ -48,6 +48,11 @@ body {
 }
 
 .event-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--e4);
   padding: var(--e4) var(--e3);
   border-bottom: 1px solid var(--linea);
 }
@@ -228,4 +233,48 @@ body {
   :root {
     --silla: 22px;
   }
+}
+
+.event-header__counters {
+  display: flex;
+  gap: var(--e4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-align: right;
+}
+
+.event-header__counter {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e1);
+}
+
+.event-header__counter-total {
+  font-family: var(--fuente-mono);
+  font-size: 2rem;
+}
+
+.event-header__counter-label {
+  color: var(--gris);
+  font-family: var(--fuente-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.toast {
+  position: fixed;
+  bottom: var(--e4);
+  left: var(--e4);
+  max-width: min(360px, calc(100vw - 2 * var(--e4)));
+  padding: var(--e3);
+  border-left: 4px solid var(--rojo);
+  background: var(--negro-2);
+  color: var(--blanco);
+  font-size: 0.875rem;
+}
+
+.toast[hidden] {
+  display: none;
 }

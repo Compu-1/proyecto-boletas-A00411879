@@ -10,7 +10,7 @@ Comandos de `codigo_base/` con `JAVA_HOME` e `ICE_HOME` exportados (`conventions
 - [x] T2: Mensaje de rechazo en el servidor y sus pruebas
 - [x] T3: Capa `api` y `store` (paralela con T2)
 - [x] T4: Plano de sillas `SeatMap` con sus estilos (paralela con T5)
-- [ ] T5: Contadores del encabezado y `Toast` (paralela con T4)
+- [x] T5: Contadores del encabezado y `Toast` (paralela con T4)
 - [ ] T6: Conexión de todo en `app.js` y verificación en dos ventanas
 - [ ] T7: Cierre
 
@@ -51,9 +51,9 @@ Comandos de `codigo_base/` con `JAVA_HOME` e `ICE_HOME` exportados (`conventions
 ## T5: Contadores del encabezado y `Toast` (paralela con T4)
 - **Archivos**: `client-js/src/js/components/EventHeader.js` (modificar), `client-js/src/js/components/Toast.js` (crear), `client-js/src/index.html`, `client-js/src/css/main.css` (modificar)
 - **Acciones**:
-  - [ ] En `EventHeader`, pintar Disponibles, Retenidas y Vendidas contadas desde `seats` (D-024); con `seats` vacío no pinta contadores.
-  - [ ] Crear `Toast(contenedor)` con `show(mensaje)`: se oculta a los 4 s y un mensaje nuevo reemplaza al anterior.
-  - [ ] Agregar `<div id="toast">` a `index.html` y los estilos `.event-header__counter*` y `.toast*`.
+  - [x] En `EventHeader`, pintar Disponibles, Retenidas y Vendidas contadas desde `seats` (D-024); con `seats` vacío no pinta contadores.
+  - [x] Crear `Toast(contenedor)` con `show(mensaje)`: se oculta a los 4 s y un mensaje nuevo reemplaza al anterior.
+  - [x] Agregar `<div id="toast">` a `index.html` y los estilos `.event-header__counter*` y `.toast*`.
 - **Verificación**: [ ] `npm run build` · [ ] manual: con 3 sillas retenidas y 1 vendida en `setState`, los contadores muestran 86, 3 y 1 y suman 90; `Toast.show` desde la consola desaparece a los 4 s
 - **Commit**: `feat(client-js): agrega contadores de aforo y avisos`
 
